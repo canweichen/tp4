@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>换换商城登陆页面</title>
+    <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="__STATIC__/css/font/login.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="exit">
+    <img src="__STATIC__/images/return.png"/>
+</div>
+<div class='loginMain'>
+    <div class='loginUI'>
+        <form>
+            <ul>
+                <li style='margin: 25px 0 25px 55px;text-align: center'><p style='font-size: 30px;font-family: 楷体;color:orange;'>换换商城登陆</p></li>
+                <li><input type='text'  placeholder='登陆账号' name='user'/></li>
+                <li class='check'></li>
+                <li><input type='password'  placeholder='登陆密码' name='password'/></li>
+                <li class='check'></li>
+                <li><input type='text' value="" placeholder='验证码' name='code'/>
+                    <div   style="margin-top: 10px"><img src="{:captcha_src()}" alt="captcha" class="changeImg"/></div>
+                </li>
+                <li class='check'></li>
+                <!--<li class='check' style="text-align: left;margin-top: 10px"><input type="checkbox" placeholder="" style="display: inline-block;width:15px;height: 15px"/>下次自动登录</li>-->
+                <li style="margin-top: 50px"><input type='button' value='登陆' id='loginBtn'></li>
+                <li style="margin-top: 20px">还没有账号：
+                    <span style="color:orangered;font-size: 18px;cursor: pointer" class="go_create">立即注册</span></li>
+                <li><hr></li>
+                <li><a style="color:darkgrey;">
+                    <img src="__STATIC__/images/qq.png" style="width: 60px;height: 60px"/>
+                </a>
+                    <a style="color:darkgrey;">
+                        <img src="__STATIC__/images/wechat.png" style="width: 60px;height: 60px;display: inline-block;margin: 0 30px 0 30px"/>
+                    </a>
+                    <a style="color:darkgrey;">
+                        <img src="__STATIC__/images/weibo.png" style="width: 60px;height: 60px"/>
+                    </a>
+                </li>
+            </ul>
+        </form>
+    </div><!--class="loginUI"-->
+</div><!--class="loginMain"-->
+</body>
+<script src="__STATIC__/js/font/jquery.js"></script>
+<script>
+    $(function(){
+        //验证码更新切换
+        $(".changeImg").click(function(){
+            $(this).attr("src","{:captcha_src()}?"+Math.random());
+        });
+        //跳转到首页
+        $("#exit").click(function(){
+            //window.location.href='{{:url("index/index/exitLogin")}}';
+        });
+        //跳转到注册页面
+        $(".go_create").click(function(){
+           location.href='{:url("index/index/register")}';
+        });
+        //登陆请求
+        $("#loginBtn").click(function(){
+            //获取表单数据
+            $data={
+                "user":$("input[name='user']").val(),
+                "psd":$("input[name='password']").val(),
+                "code":$("input[name='code']").val()
+            };
+            $.ajax({
+                type:'post',
+                //url:'{:url("index/index/checkLogin")}',
+                data:$data,
+                success:function(res){
+                    var result=JSON.parse(res);
+                    alert(result.msg);
+                    if(result.code==0){
+                        //location.href="{:url('index/index/userCenter')}";
+                    }
+                }
+            })
+        });
+    });
+</script>
+</html>
