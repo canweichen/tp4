@@ -46,7 +46,7 @@
         });
         //返回网站首页
         $("#exit").click(function(){
-            //window.location.href='{{:url("index/index/exitLogin")}}';
+            //window.location.href='{{:url("user/user/exitLogin")}}';
         });
         //前往登陆页面
         $(".gologin").click(function(){
@@ -61,13 +61,13 @@
             };
             $.ajax({
                 type:'post',
-                //url:'{:url("index/index/check_register")}',
+                //url:'{:url("user/user/check_register")}',
                 data:$data,
                 success:function(res){
                     var result=JSON.parse(res);
                     alert(result.msg);
                     if(result.code==0){
-                        //location.href="{:url('index/index/userCenter')}";
+                        //location.href="{:url('user/user/userCenter')}";
                     }
                 }
             })

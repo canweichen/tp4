@@ -52,7 +52,7 @@
         });
         //跳转到首页
         $("#exit").click(function(){
-            //window.location.href='{{:url("index/index/exitLogin")}}';
+            //window.location.href='{{:url("user/user/exitLogin")}}';
         });
         //跳转到注册页面
         $(".go_create").click(function(){
@@ -68,13 +68,13 @@
             };
             $.ajax({
                 type:'post',
-                //url:'{:url("index/index/checkLogin")}',
+                //url:'{:url("user/user/checkLogin")}',
                 data:$data,
                 success:function(res){
                     var result=JSON.parse(res);
                     alert(result.msg);
                     if(result.code==0){
-                        //location.href="{:url('index/index/userCenter')}";
+                        //location.href="{:url('user/user/userCenter')}";
                     }
                 }
             })
