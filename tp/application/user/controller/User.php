@@ -13,7 +13,7 @@ class User extends Controller
     public function register(){
         return $this->fetch('register');
     }
-    public function userCenter(){
-        return $this->fetch('userCenter');
+    public function usercenter(){
+        return $this->fetch('usercenter');
     }
 }

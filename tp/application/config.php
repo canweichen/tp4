@@ -62,7 +62,7 @@ return [
     // 默认控制器名
     'default_controller'     => 'User',
     // 默认操作名
-    'default_action'         => 'userCenter',
+    'default_action'         => 'usercenter',
     // 默认验证器
     'default_validate'       => '',
     // 默认的空控制器名

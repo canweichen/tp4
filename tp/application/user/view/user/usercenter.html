@@ -6,8 +6,24 @@
     <link rel="stylesheet" href="__STATIC__/layui/css/layui.css"  media="all"/>
     <link rel="stylesheet" href="__CSS__/font/userCenter.css"/>
     <link rel="stylesheet" href="__STATIC__/bootstrap/css/bootstrap.min.css"/>
+    <script src="__STATIC__/public/jquery.js"></script>
+    <script src="__STATIC__/public/vue.js"></script>
+    <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/layui/layui.js"></script>
     <style>
+        @media (min-width:768px){
+            /*-----移动端切换标签按钮大屏隐藏------*/
+            .open_mobile{
+                display: none;
+            }
+        }
         @media (max-width: 768px) {
+            /*----待支付订单 按钮 自适应-------*/
+            .mobile_xm_table{
+                width: 20%;
+                text-align:center;
+            }
+            /*-------侧边栏菜单遮罩层移动端样式-------------*/
             #mobile{
                 width: 100%;
                 height: 100%;
@@ -16,16 +32,20 @@
                 background: rgba(0,0,0,0.9);
                 display: none;
             }
+            /*--------放菜单栏容器移动端样式--------------*/
             .content_left{
                 display: none;
                 position: fixed;
-                width:30%;
+                width:40%;
                 height: 30%;
                 z-index: 100;
             }
+            /*---------主体内容移动端隐藏样式-------------*/
             .content_right{
                 width:100%;
+                text-align: center;
             }
+            /*---------广告栏移动端隐藏样式-------------*/
             .content_middle{
                 display: none;
             }
@@ -33,6 +53,7 @@
     </style>
 </head>
 <body>
+<div id="my_app">
 <!--移动端模态框-->
 <div id="mobile"></div>
 <!--添加/修改地址模态框-->
@@ -106,10 +127,10 @@
     </div>
 </div>
  <!--导航栏-->
-<div class="nav">
+<div class="nav" style="margin-bottom: -10px;">
         <ul class="layui-nav nav_bar_menu" style="text-align:right">
-            <li class="layui-nav-item">
-                <a class="open_mobile">移动菜单</a>
+            <li class="layui-nav-item" style="float: left;">
+                <img src="__STATIC__/images/nav-list.png" class="open_mobile"/>
             </li>
             <li class="layui-nav-item">
                 <a href="{:url('user/User/login')}">登陆<span class="layui-badge">9</span></a>
@@ -174,15 +195,14 @@
                         <a>发布闲置中心</a>
                         <dl class="layui-nav-child">
                             <dd  id="8"><a href="javascript:;">发布闲置</a></dd>
-                            <dd id="9"><a href="javascript:;">我的拍卖</a></dd>
+                            <dd id="9"><a href="javascript:;">我的商品</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed">
                         <a>维权中心</a>
                         <dl class="layui-nav-child">
                             <dd id="10"><a href="javascript:;">退款管理</a></dd>
-                            <dd id="11"><a href="javascript:;">售后管理</a></dd>
-                            <dd id="12"><a href="javascript:;">投诉管理</a></dd>
+                            <dd id="11"><a href="javascript:;">投诉管理</a></dd>
                         </dl>
                     </li>
                 </ul>
@@ -196,7 +216,7 @@
                         <div class="grid-demo info">
                                 <img src="__STATIC__/images/wechat.png" id="images">
                                 <div class="layui-upload">
-                                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                                    <button type="button" class="layui-btn" id="heading">上传图片</button>
                                     <div class="layui-upload-list" style="display: inline">
                                         <span id="demoText"></span>
                                     </div>
@@ -441,6 +461,9 @@
                                         <input type="text" class="layui-input" id="end_record" placeholder="yyyy-MM-dd HH:mm:ss">
                                     </div>
                                 </div>
+                                <div class="layui-inline">
+                                   <button class="btn btn-primary">搜索</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -485,7 +508,27 @@
                 <h1>我的消息</h1>
                 <div class="panel panel-default" style="margin: 2% 0 0 3%">
                     <!-- Default panel contents -->
-                    <div class="panel-heading">Panel heading</div>
+                    <div class="panel-heading">
+                        <div class="layui-form">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">开始</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" id="start_message" placeholder="yyyy-MM-dd HH:mm:ss">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">结束</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" id="end_message" placeholder="yyyy-MM-dd HH:mm:ss">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <button class="btn btn-primary">搜索</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Table -->
                     <table class="table">
                         <tr>
@@ -515,88 +558,356 @@
                     </table>
                 </div>
             </div>
-            <div class="buy_order">6</div>
-            <div class="boss_order">7</div>
-            <div class="publish_normal">8</div>
-            <div class="public_action">9</div>
+            <div class="buy_order">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">未支付</li>
+                        <li>待收货</li>
+                        <li>全部订单</li>
+                    </ul>
+                    <div class="layui-tab-content" style="height: auto;">
+                        <div class="layui-tab-item layui-show">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="background: none">
+                                    <p>待支付</p>
+                                    <p>
+                                        <span>2018-01-25 12:26:56</span> |
+                                        <span>欧阳飞雪</span> |
+                                        订单号：<span>10236547895</span> |
+                                        <span>在线支付</span>
+                                    </p>
+                                     <p style="text-align: right;font-size: 15px">订单金额：￥
+                                            <b style="font-size: 18px">895.00</b>元
+                                     </p>
+                                </div>
+                                <div class="panel-body">
+                                    <table>
+                                        <tr>
+                                            <td style="width: 10%;">
+                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <p>科技时代的巴萨的框架啊</p>
+                                                <p>699.00 x 1</p>
+                                            </td>
+                                            <td style="" class="mobile_xm_table">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">立即支付</button><br>
+                                                <button class="btn btn-primary" style="color:black;background: none">取消订单</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="background: none">
+                                    <p>待支付</p>
+                                    <p>
+                                        <span>2018-01-25 12:26:56</span> |
+                                        <span>欧阳飞雪</span> |
+                                        订单号：<span>10236547895</span> |
+                                        <span>在线支付</span>
+                                    </p>
+                                    <p style="text-align: right;font-size: 15px">订单金额：￥
+                                        <b style="font-size: 18px">895.00</b>元
+                                    </p>
+                                </div>
+                                <div class="panel-body">
+                                    <table>
+                                        <tr>
+                                            <td style="width: 10%;">
+                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <p>科技时代的巴萨的框架啊</p>
+                                                <p>699.00 x 1</p>
+                                            </td>
+                                            <td style="" class="mobile_xm_table">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">立即支付</button><br>
+                                                <button class="btn btn-primary" style="color:black;background: none">取消订单</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="background: none">
+                                    <p>待收货</p>
+                                    <p>
+                                        <span>2018-01-25 12:26:56</span> |
+                                        <span>欧阳飞雪</span> |
+                                        订单号：<span>10236547895</span> |
+                                        <span>在线支付</span>
+                                    </p>
+                                    <p style="text-align: right;font-size: 15px">订单金额：￥
+                                        <b style="font-size: 18px">895.00</b>元
+                                    </p>
+                                </div>
+                                <div class="panel-body">
+                                    <table>
+                                        <tr>
+                                            <td style="width: 10%;">
+                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <p>科技时代的巴萨的框架啊</p>
+                                                <p>699.00 x 1</p>
+                                            </td>
+                                            <td style="" class="mobile_xm_table">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">确认收货</button><br>
+                                                <button class="btn btn-primary" style="color:black;background: none">退款</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="background: none">
+                                    <p>待收货</p>
+                                    <p>
+                                        <span>2018-01-25 12:26:56</span> |
+                                        <span>欧阳飞雪</span> |
+                                        订单号：<span>10236547895</span> |
+                                        <span>在线支付</span>
+                                    </p>
+                                    <p style="text-align: right;font-size: 15px">订单金额：￥
+                                        <b style="font-size: 18px">895.00</b>元
+                                    </p>
+                                </div>
+                                <div class="panel-body">
+                                    <table>
+                                        <tr>
+                                            <td style="width: 10%;">
+                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <p>科技时代的巴萨的框架啊</p>
+                                                <p>699.00 x 1</p>
+                                            </td>
+                                            <td style="" class="mobile_xm_table">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">确认收货</button><br>
+                                                <button class="btn btn-primary" style="color:black;background: none">退款</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="background: none">
+                                    <p>已收货</p>
+                                    <p>
+                                        <span>2018-01-25 12:26:56</span> |
+                                        <span>欧阳飞雪</span> |
+                                        订单号：<span>10236547895</span> |
+                                        <span>在线支付</span>
+                                    </p>
+                                    <p style="text-align: right;font-size: 15px">订单金额：￥
+                                        <b style="font-size: 18px">895.00</b>元
+                                    </p>
+                                </div>
+                                <div class="panel-body">
+                                    <table>
+                                        <tr>
+                                            <td style="width: 10%;">
+                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <p>科技时代的巴萨的框架啊</p>
+                                                <p>699.00 x 1</p>
+                                            </td>
+                                            <td style="" class="mobile_xm_table">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">申请售后</button><br>
+                                                <button class="btn btn-primary" style="color:black;background: none">订单详情</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="boss_order">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">待发货</li>
+                        <li>全部订单</li>
+                    </ul>
+                    <div class="layui-tab-content" style="height: auto;">
+                        <div class="layui-tab-item layui-show">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="background: none">
+                                    <p>已付款 待发货</p>
+                                    <p>
+                                        <span>2018-01-25 12:26:56</span> |
+                                        <span>欧阳飞雪</span> |
+                                        订单号：<span>10236547895</span> |
+                                        <span>在线支付</span>
+                                    </p>
+                                    <p style="text-align: right;font-size: 15px">订单金额：￥
+                                        <b style="font-size: 18px">895.00</b>元
+                                    </p>
+                                </div>
+                                <div class="panel-body">
+                                    <table>
+                                        <tr>
+                                            <td style="width: 10%;">
+                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <p>科技时代的巴萨的框架啊</p>
+                                                <p>699.00 x 1</p>
+                                            </td>
+                                            <td style="" class="mobile_xm_table">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">一键发货</button><br>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" style="background: none">
+                                    <p>已回款</p>
+                                    <p>
+                                        <span>2018-01-25 12:26:56</span> |
+                                        <span>欧阳飞雪</span> |
+                                        订单号：<span>10236547895</span> |
+                                        <span>在线支付</span>
+                                    </p>
+                                    <p style="text-align: right;font-size: 15px">订单金额：￥
+                                        <b style="font-size: 18px">895.00</b>元
+                                    </p>
+                                </div>
+                                <div class="panel-body">
+                                    <table>
+                                        <tr>
+                                            <td style="width: 10%;">
+                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <p>科技时代的巴萨的框架啊</p>
+                                                <p>699.00 x 1</p>
+                                            </td>
+                                            <td style="" class="mobile_xm_table">
+                                                <button class="btn btn-primary" style="color:black;background: none">订单详情</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="publish_normal">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">发布商品</li>
+                    </ul>
+                    <div class="layui-tab-content" style="height:auto;">
+                        <div class="layui-tab-item layui-show">
+                            <!--发布普通商品-->
+                            <form id="normal_form">
+                                <!--发布商品类型-->
+                                <div>
+                                    <select  v-model="selected" class="form-control input-lg select_mod" @change="actionType()">
+                                        <option value="">选择商品发布类型</option>
+                                        <option v-for="x in type"  v-bind:value="x.op">{{ x.name }}</option>
+                                    </select>
+                                </div>
+                                <br>
+                                <!--商品标题-->
+                                <textarea class="form-control" rows="2" maxlength="32" placeholder="商品标题/最长字符32位" style="display: inline;width: 90%;font-size: 15px"></textarea>
+                                <!--活动开始结束时间-->
+                                <div class="layui-inline" v-if="judge">
+                                    <!--<label class="layui-form-label"></label>-->
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" id="start_action" placeholder="活动开始时间"  style="height: 50px"/>
+                                    </div>
+                                    <!--<label class="layui-form-label"></label>-->
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input" id="end_action" placeholder="活动结束时间"  style="height: 50px"/>
+                                    </div>
+                                </div>
+                                <!--商品分类 自定义class为select_mod-->
+                                <div>
+                                    <select class="form-control input-lg select_mod" style="margin-top: 10px;">
+                                        <option>商品类型</option>
+                                        <option>数码</option>
+                                    </select>
+                                    <select class="form-control input-lg select_mod">
+                                        <option>商品品牌</option>
+                                        <option>数码</option>
+                                    </select>
+                                    <select class="form-control input-lg select_mod">
+                                        <option>新旧程度</option>
+                                        <option>九五新</option>
+                                    </select>
+                                </div>
+                                <!--商品价格 自定义id为normal_price 和 normal_old_price-->
+                                <br>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">￥</div>
+                                            <input type="text" class="form-control input-lg" id="normal_price" placeholder="商品全新价格" style="font-size: 15px"/>
+                                            <div class="input-group-addon">￥</div>
+                                            <input type="text" class="form-control input-lg" id="normal_old_price" placeholder="二手价格" style="font-size: 15px"/>
+                                        </div>
+                                    </div>
+                                <!--省 市 区联动 自定义class为select_mod-->
+                                <div style="font-size: 15px">
+                                    <select class="form-control input-lg select_mod" style="margin-top: 10px">
+                                        <option>省份</option>
+                                        <option>福建省</option>
+                                    </select>
+                                    <select class="form-control input-lg select_mod">
+                                        <option>市区</option>
+                                        <option>福州市</option>
+                                    </select>
+                                    <select class="form-control input-lg select_mod">
+                                        <option>区县</option>
+                                        <option>仓山区</option>
+                                    </select>
+                                </div>
+                                <!--商品描述/基本信息介绍-->
+                                <br>
+                                <textarea class="form-control" rows="4"  placeholder="商品描述/基本信息介绍" style="display: inline;width: 90%;font-size: 15px"></textarea>
+                                <!--默认图片上传 自定义id为 default 和 default_img-->
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn" id="default">商品主图</button><br>
+                                    <img class="layui-upload-img" id="default_img"/>
+                                </div>
+                                <!--商品图片 自定义id为 more_pic_btn 和 more_picture-->
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn" id="more_pic_btn">商品详情图</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                        商品预览图,最多10张图片
+                                        <div class="layui-upload-list" id="more_picture"></div>
+                                    </blockquote>
+                                </div>
+                                <!--自定义class为 clear_picture id为publishNormal-->
+                                <button type="button" class="btn btn-primary btn-lg" id="publicNormal">发布商品</button>
+                                <input type="reset" class="btn btn-warning " value="重置信息">
+                                <button type="button" class="btn btn-danger clear_picture">清空图片</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="myGoods">9</div>
             <div class="exit">10</div>
-            <div class="sale">11</div>
-            <div class="complain">12</div>
+            <div class="complain">11</div>
         </div>
         <div class="content_middle"></div>
     </div><!--class="content" body主体区域-->
 <!--foot页尾 商城备案信息-->
 <div class="foot"></div>
+</div>
 </body>
-<script src="__JS__/font/jquery.js"></script>
-<script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
-<script src="__STATIC__/layui/layui.js"></script>
-<script>
-    $(function(){
-        layui.use('element', function(){
-            var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
-            //监听导航点击
-            element.on('nav(demo)', function(elem){
-            });
-        });
-        //模态框添加点击事件-->隐藏移动端menu
-        $("#mobile").click(function(){
-           $(".content_left").css("display","none");
-            $("#mobile").css("display","none");
-        });
-        //显示移动端menu
-        $(".open_mobile").click(function(){
-            $(".content_left").css("display","block");
-            $("#mobile").css("display","block");
-        });
-        var $dd=$(".content").find("dd");
-        var $div=$(".content_right").children("div");
-        //菜单栏的标签/页面切换
-        $dd.click(function(){
-            $div.css({display:"none"});
-            $div.eq($(this).attr('id')-1).css({display:"block"});
-        });
-        //上传图片
-        layui.use('upload', function() {
-            var $ = layui.jquery , upload = layui.upload;
-            //普通图片上传
-            var uploadInst = upload.render({
-                elem: '#test1'
-                , url: '/upload/'
-                , before: function (obj) {
-                    //预读本地文件示例，不支持ie8
-                    obj.preview(function (index, file, result) {
-                        $('#images').attr('src', result); //图片链接（base64）
-                    });
-                }
-                , done: function (res) {
-                    //如果上传失败
-                    if (res.code > 0) {
-                        return layer.msg('上传失败');
-                    }
-                    //上传成功
-                }
-                , error: function () {
-                    //演示失败状态，并实现重传
-                    var demoText = $('#demoText');
-                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
-                    demoText.find('.demo-reload').on('click', function () {
-                        uploadInst.upload();
-                    });
-                }
-            });
-        });
-        layui.use('laydate', function() {
-            var laydate = layui.laydate;
-            laydate.render({
-                elem: '#start_record'
-                ,type: 'datetime'
-            });
-            laydate.render({
-                elem: '#end_record'
-                ,type: 'datetime'
-            });
-        });
-    });
-</script>
+<script src="__JS__/font/user.js"></script>
 </html>
