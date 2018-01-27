@@ -8,6 +8,18 @@ $(function(){
         element.on('nav(demo)', function(elem){
         });
     });
+    //我的地址鼠标悬乎事件
+    var $address=$(".address").children("div");
+    $address.mouseover(function(){
+       $address.css({borderColor:"lightGray",boxShadow:"0px 0px  0px 0px lightGray"});
+        $(this).css({borderColor:"lightBlue",boxShadow:"0px 0px  10px 5px lightBlue"});
+    });
+    //我的收藏鼠标悬乎事件
+    var $collect=$(".collect").children("div");
+    $collect.mouseover(function(){
+        $collect.css({borderColor:"lightGray",boxShadow:"0px 0px  0px 0px lightGray"});
+        $(this).css({borderColor:"orange",boxShadow:"0px 0px  10px 5px orange"});
+    });
     //模态框添加点击事件-->隐藏移动端menu
     $("#mobile").click(function(){
         console.log(window);

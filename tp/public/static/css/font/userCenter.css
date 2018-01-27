@@ -183,6 +183,12 @@
 .myGoods{
     display: block;
 }
+.myGoods>.panel{
+    float: left;
+    width: 250px;
+    margin: 25px 0 0 3%;
+    text-align: center;
+}
 /*--------------------------*/
 #action_default_img{
     width: 100px;

@@ -247,7 +247,7 @@
                 <hr>
             </div>
             <div class="address">
-                <h1>收货地址</h1>
+                <h1  style="text-align: left">收货地址</h1>
                 <!--添加地址-->
                 <div class="add_address">
                     <i class="layui-icon" data-toggle="modal" data-target="#exampleModal" style="">&#xe61f;</i>
@@ -336,7 +336,7 @@
                 </div>
             </div>
             <div class="collect">
-                <h1>我的收藏</h1>
+                <h1 style="text-align: left">我的收藏</h1>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
@@ -582,7 +582,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <table>
-                                        <tr>
+                                        <tr style="height: 100px">
                                             <td style="width: 10%;">
                                                 <img src="__STATIC__/images/qq.png" class="trade_img">
                                             </td>
@@ -593,6 +593,15 @@
                                             <td style="" class="mobile_xm_table">
                                                 <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">立即支付</button><br>
                                                 <button class="btn btn-primary" style="color:black;background: none">取消订单</button>
+                                            </td>
+                                        </tr>
+                                        <tr  style="height: 100px">
+                                            <td style="width: 10%;">
+                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <p>科技时代的巴萨的框架啊</p>
+                                                <p>699.00 x 1</p>
                                             </td>
                                         </tr>
                                     </table>
@@ -822,7 +831,7 @@
                                 </div>
                                 <br>
                                 <!--商品标题-->
-                                <textarea class="form-control" rows="2" maxlength="32" placeholder="商品标题/最长字符32位" style="display: inline;width: 90%;font-size: 15px"></textarea>
+                                <textarea class="form-control" rows="2" maxlength="32" placeholder="商品标题/品牌品类都是买家喜欢搜索的/最长字符32位/" style="display: inline;width: 90%;font-size: 15px"></textarea>
                                 <!--活动开始结束时间-->
                                 <div class="layui-inline" v-if="judge">
                                     <!--<label class="layui-form-label"></label>-->
@@ -899,7 +908,22 @@
                     </div>
                 </div>
             </div>
-            <div class="myGoods">9</div>
+            <div class="myGoods">
+                <h1>我的商品</h1>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
+                    </div>
+                    <div class="panel-footer" style="background: none;">
+                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
+                        <p>￥<em>59.00</em></p>
+                        <p style="color: red">
+                            <span>在售商品</span>
+                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
+                        </p>
+                    </div>
+                </div>
+            </div>
             <div class="exit">10</div>
             <div class="complain">11</div>
         </div>
