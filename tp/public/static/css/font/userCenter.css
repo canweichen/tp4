@@ -1,0 +1,212 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.content{
+    width:100%;
+}
+.layui-nav .layui-nav-item a:hover{
+    text-decoration: none;
+}
+.nav .layui-nav .layui-nav-item a{
+    text-decoration: none;
+}
+
+.layui-nav-tree .layui-nav-child a:hover{
+    text-decoration: none;
+}
+.layui-nav-tree .layui-nav-child a{
+    text-decoration: none;
+}
+
+.content_left{
+    width:12%;
+    height: 860px;
+    float: left;
+    /*display: none;*/
+}
+.content_right{
+    width:75%;
+    height: 860px;
+    float: left;
+}
+.content_middle{
+    width:12%;
+    height: 860px;
+    float: right;
+    background: black;
+    /*display: none;*/
+}
+.content_right>div{
+    width:100%;
+    height: auto;
+}
+
+/*------------user start css----------------*/
+.user{
+    display: none;
+    text-align: center;
+}
+#images{
+    display: inline-block;
+    width: 160px;
+    height: 160px;
+    border-radius: 80px;
+}
+.user>.info{
+    text-align: center;
+}
+.show_info{
+    text-align: left;
+    height: 45px;
+    line-height: 45px;
+    font-size: 18px;
+    margin-left: 40%;
+}
+/*-----------user end css---------------*/
+
+/*----------------address start css---------------------*/
+.address{
+    display: none;
+}
+.content h1{
+    color: #757575;
+    margin-left:3%;
+}
+.address>div{
+    width: 385px;
+    height: 200px;
+    margin: 20px 0 0 3%;
+    border: 1px solid lightgrey;
+    text-align: center;
+    float: left;
+}
+.add_address>i{
+    margin-top: 40px;
+    display: inline-block;
+    font-size: 80px;
+    color: lightgray;
+    cursor: pointer
+}
+.add_address>p{
+    font-size: 20px;
+    color: lightgray;
+}
+.show_address>p{
+    text-align: left;
+    color:grey;
+    height: 30px;
+    line-height: 30px;
+    font-size: 15px;
+    margin:0 5% 0 5%;
+}
+.operation_btn{
+    float: right;
+}
+/*-----------------address end css--------------------------*/
+/*-------------collect start css---------------------*/
+.collect{
+    display:none;
+}
+.collect>.panel{
+    float: left;
+    width: 190px;
+    margin: 25px 0 0 3%;
+    text-align: center;
+}
+/*------------collect end css----------------------------*/
+
+/*-------------record start css------------------------*/
+.record{
+    display: none;
+}
+.col_span>span{
+    display: inline-block;
+    width:16%;
+}
+/*-------------record end css-----------------------------*/
+.message{
+    display: none;
+}
+
+/*-------------buy_order start css--------------------*/
+.buy_order{
+    display:none;
+}
+.trade_img{
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}
+.buy_order table{
+    text-align: center;
+    width: 100%;
+}
+.mobile_xm_table{
+    width: 50%;
+    text-align: right;
+}
+/*---------------buy_order end css---------------------*/
+/*-----------boss_order start css------------------*/
+.boss_order{
+    display: none;
+}
+.layui-tab-title li{
+    font-size: 20px;
+}
+.boss_order table{
+    text-align: center;
+    width: 100%;
+}
+/*-------boss_order end css-----------*/
+/*--------public_normal start css----------------*/
+.publish_normal{
+    display: none;
+}
+#default_img{
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin: 10px 0;
+}
+#more_picture{
+    height: auto;
+}
+.publish_normal .select_mod{
+    width: 31%;
+    display: inline;
+    font-size: 15px;
+}
+/*----------public_normal end css------------------*/
+/*----------public_action start css------------------*/
+.myGoods{
+    display: block;
+}
+/*--------------------------*/
+#action_default_img{
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin: 10px 0;
+}
+#moreAction_picture{
+    height: auto;
+}
+/*----------public_action end css------------------*/
+
+.exit{
+    display: none;
+    background: purple;
+    height: 860px;
+}
+.sale{
+    display: none;
+    background: oldlace;
+    height: 860px;
+}
+.complain{
+    display: none;
+    background: orangered;
+    height: 860px;
+}
