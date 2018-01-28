@@ -138,6 +138,7 @@
             <li class="layui-nav-item">
                 <a href="javascript:;"><img src={$info['info'][0]['headimg']} class="layui-nav-img">我</a>
                 <dl class="layui-nav-child">
+                    <dd><a href="{:url('user/User/information')}">完善个人资料</a></dd>
                     <dd id="1a"><a href="javascript:;">{$info['info'][0]['userid']}</a></dd>
                     <dd  @click="exitLogin()"><a>退出登陆</a></dd>
                 </dl>
@@ -222,8 +223,8 @@
                             <p>验证邮箱：
                                 <span>{$info['info'][0]['email']}</span>
                             </p>
-                            <p>登陆密码：
-                                <span>{$info['info'][0]['password']}</span>
+                            <p>用户生日：
+                                <span>{$info['info'][0]['birthday']}</span>
                             </p>
                             <p style="float: right">
                                 <button class="layui-btn"  data-toggle="modal" data-target="#alter_user"><i class="layui-icon">&#xe642;</i></button>
@@ -813,7 +814,7 @@
                                 <div>
                                     <select  v-model="selected" class="form-control input-lg select_mod" @change="actionType()">
                                         <option value="">选择商品发布类型</option>
-                                        <option v-for="x in type"  v-bind:value="x.op">{{ x.name }}</option>
+                                        <option v-for="x in type"  :value="x.op">{{ x.name }}</option>
                                     </select>
                                 </div>
                                 <br>

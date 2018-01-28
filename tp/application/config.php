@@ -249,7 +249,11 @@ return [
             'account_ok' => ['msg'=>'账号合法','code'=>'9000','data',[]],
             'register_ok' => ['msg'=>'注册成功','code'=>'9000','data',[]],
             'register_fail' => ['msg'=>'注册失败','code'=>'9002','data',[]],
-            'register_code' => ['msg'=>'验证码错误','code'=>'9003','data',[]]
+            'register_code' => ['msg'=>'验证码错误','code'=>'9003','data',[]],
+            'register_email' => ['msg'=>'邮箱已被占用','code'=>'9004','data',[]],
+            'register_email_ok' => ['msg'=>'邮箱合法','code'=>'9000','data',[]],
+            'info_ok' => ['msg'=>'资料提交成功','code'=>'9000','data',[]],
+            'info_err' => ['msg'=>'资料提交失败','code'=>'9005','data',[]]
         ],
         'login' =>[
             'code_err' => ['msg'=>'验证码错误','code'=>'1000','data',[]],

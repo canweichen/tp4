@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <title>账号信息</title>
+    <link rel="stylesheet" href="__CSS__/font/information.css"/>
+    <link rel="stylesheet" href="__STATIC__/bootstrap/css/bootstrap.min.css"/>
+    <script src="__STATIC__/public/jquery.js"></script>
+    <script src="__STATIC__/public/vue.js"></script>
+    <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/layui/layui.all.js"></script>
+    <style>
+        @media (max-width: 768px) {
+            .safeWidth{
+                width:100%;
+                margin: 0 auto;
+            }
+            .info>input{
+                width:100%;
+                margin: 0;
+            }
+            .sex{
+                width: 100%;
+                margin: 0;
+            }
+            .info>.china>select{
+                width:100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="information">
+<div class="safeWidth head">
+    <span>换换账号中心</span>
+        <a href="{:url('user/User/userCenter')}">
+            <button class="btn btn-info btn-lg">返回个人中心 </button>
+        </a>
+</div>
+<div class="safeWidth">
+    <div class="panel panel-default">
+        <div class="panel-heading title">完善个人资料</div>
+        <div class="panel-body info">
+            <input class="form-control input-lg" type="text" placeholder="姓名" v-model="name" @blur="checkName()">
+            <p class="check">{{ userName }}</p>
+            <input class="form-control input-lg" type="text" placeholder="邮箱" v-model="email" @blur="checkEmail()">
+            <p class="check">{{ userEmail }}</p>
+            <input class="form-control input-lg" type="text" placeholder="身份证号" v-model="IDNum" @blur="checkIDNum()">
+            <p class="check">{{ idCard }}</p>
+            <label class="sex">
+                <select class="form-control input-lg" v-model="sex">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </label>
+            <p class="check" style="height: 15px"></p>
+            <label class="china">
+                <select class="form-control input-lg" name="province" v-model="province" @change="getCity()">
+                    <option v-for="x in provinceList" :value=" x.provinceid ">{{ x.province }}</option>
+                </select>
+                <select class="form-control input-lg" name="city" v-model="city" @change="getArea()">
+                    <option v-for="y in cityList" :value=" y.cityid ">{{ y.city }}</option>
+                </select>
+                <select class="form-control input-lg" name="areas" v-model="area">
+                    <option v-for="z in areasList" :value=" z.areaid ">{{ z.area }}</option>
+                </select>
+            </label>
+            <button class="btn btn-primary btn-lg" style="margin-top: 20px" @click="saveUser()">保存</button>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script>
+    var check_email='{:url("user/User/checkEmail")}';
+    var check_IDNum='{:url("user/User/checkIDNum")}';
+    var get_province='{:url("user/User/getProvince")}';
+    var get_city='{:url("user/User/getCity")}';
+    var get_areas='{:url("user/User/getAreas")}';
+    var save_user='{:url("user/User/saveUser")}';
+    var go_userCenter='{:url("user/User/userCenter")}';
+</script>
+<script src="__JS__/font/information.js"></script>
+</html>

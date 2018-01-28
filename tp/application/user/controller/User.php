@@ -41,7 +41,7 @@ class User extends Controller
             $this->assign("info",$data);
             return $this->fetch('userCenter');
         }else{
-            $this->error("非法闯入，跳转到网站首页","user/user/login","",10);
+            $this->error("非法闯入，跳转到网站首页","login/Login/login","",10);
            exit();
         }
     }
@@ -72,6 +72,95 @@ class User extends Controller
             }else{
                 // 上传失败获取错误信息
                 echo $file->getError();
+            }
+        }
+    }
+    public function information(){
+        return $this->fetch('information');
+    }
+    public function checkEmail(){
+        if($this->check_session()[1]){
+            $email=input('?post.email')?input("email"):'';
+            $res=Db::table('t_user')->where(['`email`' => $email])->select();
+            if(empty($res)){
+                echo json_encode(config('errorMsg')['register']['register_email_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['register']['register_email']);
+            }
+        }else{
+            $this->error("非法闯入，跳转到网站登陆页面","login/Login/login","",10);
+            exit();
+        }
+    }
+    public function checkIDNum(){
+        if($this->check_session()[1]){
+            $ID=input('?post.ID')?input("ID"):'';
+            $res=Db::table('t_user')->where(['`idCard`' => $ID])->select();
+            if(empty($res)){
+                echo json_encode(config('errorMsg')['register']['register_email_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['register']['register_email']);
+            }
+        }else{
+            //$this->error("非法闯入，跳转到网站登陆页面","login/Login/login","",10);
+            exit("登陆超时");
+        }
+    }
+    public function getProvince(){
+        if($this->check_session()[1]){
+            $res=Db::table('provinces')->select();
+            echo json_encode($res);
+        }else{
+            exit("登陆超时");
+        }
+    }
+    public function getCity(){
+        $province=input('?post.province')?input('province'):'';
+        if($this->check_session()[1]){
+            $res=Db::table('cities')->where(['`provinceid`' => $province])->select();
+            echo json_encode($res);
+        }else{
+            exit("登陆超时");
+        }
+    }
+    public function getAreas(){
+        $city=input('?post.city')?input('city'):'';
+        if($this->check_session()[1]){
+            $res=Db::table('areas')->where(['`cityid`' => $city])->select();
+            echo json_encode($res);
+        }else{
+            exit("登陆超时");
+        }
+    }
+    public function saveUser(){
+        $session=$this->check_session();
+        if($session[1]){
+        $name=input('?post.name')?input('name'):'';
+        $email=input('?post.email')?input('email'):'';
+        $id=input('?post.id')?input('id'):'';
+        $sex=input('?post.sex')?input('sex'):'';
+        $province=input('?post.province')?input('province'):'';
+        $city=input('?post.city')?input('city'):'';
+        $area=input('?post.area')?input('area'):'';
+        $birthday=input('?post.birthday')?input('birthday'):'';
+        $pro=Db::table('provinces')->where(['`provinceid`' => $province])->select();
+        $ci=Db::table('cities')->where(['`cityid`' => $city])->select();
+        $ar=Db::table('areas')->where(['`areaid`' => $area])->select();
+        $data=[
+            'nickname' => $name ,
+            'sex' => $sex,
+            'provinces' => $pro[0]['province'] ,
+            'cities' => $ci[0]['city'] ,
+            'areas' => $ar[0]['area'] ,
+            'birthday' => $birthday ,
+            'idcard' => $id,
+            'email' => $email
+        ];
+            $res=Db::table('t_user')->where('`userid`' , $session[0][0]['userid'])->update($data);
+            if($res){
+                echo json_encode(config('errorMsg')['register']['info_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['register']['info_err']);
             }
         }
     }
