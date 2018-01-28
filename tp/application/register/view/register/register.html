@@ -44,9 +44,9 @@
     $(".changeImg").click(function(){
         $(this).attr("src","{:captcha_src()}?"+Math.random());
     });
-    var check_account="{:url('user/User/checkAccount')}";
-    var go_register="{:url('user/User/goRegister')}";
-    var go_login="{:url('user/User/login')}";
+    var check_account="{:url('register/Register/checkAccount')}";
+    var go_register="{:url('register/Register/goRegister')}";
+    var go_login="{:url('login/Login/login')}";
 </script>
 <script src="__JS__/font/register.js"></script>
 </html>
