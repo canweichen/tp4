@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!--禁止缩放-->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
     <title>个人中心</title>
     <link rel="stylesheet" href="__STATIC__/layui/css/layui.css"  media="all"/>
     <link rel="stylesheet" href="__CSS__/font/userCenter.css"/>
@@ -9,6 +11,7 @@
     <script src="__STATIC__/public/jquery.js"></script>
     <script src="__STATIC__/public/vue.js"></script>
     <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/layui/layui.all.js"></script>
     <script src="__STATIC__/layui/layui.js"></script>
     <style>
         @media (min-width:768px){
@@ -133,39 +136,18 @@
                 <img src="__STATIC__/images/nav-list.png" class="open_mobile"/>
             </li>
             <li class="layui-nav-item">
+                <a href="javascript:;"><img src={$info['info'][0]['headimg']} class="layui-nav-img">我</a>
+                <dl class="layui-nav-child">
+                    <dd id="1a"><a href="javascript:;">{$info['info'][0]['userid']}</a></dd>
+                    <dd  @click="exitLogin()"><a>退出登陆</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item">
                 <a href="{:url('user/User/login')}">登陆<span class="layui-badge">9</span></a>
             </li>
             <li class="layui-nav-item">
                 <a href="{:url('user/User/register')}">注册<span class="layui-badge-dot"></span></a>
             </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;"><img src="__STATIC__/images/wechat.png" class="layui-nav-img">我</a>
-                <dl class="layui-nav-child">
-                    <dd id="1a"><a href="javascript:;">个人信息</a></dd>
-                    <dd><a href="javascript:;">退出登陆</a></dd>
-                </dl>
-            </li>
-            <!--<li class="layui-nav-item">
-                <a href="javascript:;">订单管理</a>
-                <dl class="layui-nav-child">
-                    <dd id="6a"><a href="javascript:;">买家订单</a></dd>
-                    <dd id="7a"><a href="javascript:;">卖家订单</a></dd>
-                </dl>
-            </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">闲置处理</a>
-                <dl class="layui-nav-child">
-                    <dd id="8a"><a href="javascript:;">发布闲置</a></dd>
-                    <dd id="9a"><a href="javascript:;">我的拍卖</a></dd>
-                </dl>
-            </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">维权</a>
-                <dl class="layui-nav-child">
-                    <dd id="10a"><a href="javascript:;">退款管理</a></dd>
-                    <dd id="11a"><a href="javascript:;">投诉</a></dd>
-                </dl>
-            </li>-->
         </ul>
     </div>
 <!--主体-->
@@ -214,9 +196,11 @@
                 <div class="layui-row" style="margin-top: 5%;">
                    <!-- <div class="layui-col-xs4 layui-col-sm5 layui-col-md4">-->
                         <div class="grid-demo info">
-                                <img src="__STATIC__/images/wechat.png" id="images">
+                                <img src={$info['info'][0]['headimg']} id="images">
                                 <div class="layui-upload">
-                                    <button type="button" class="layui-btn" id="heading">上传图片</button>
+                                    <button type="button" class="layui-btn layui-icon" id="heading">
+                                        &#xe67c; 修改头像
+                                    </button>
                                     <div class="layui-upload-list" style="display: inline">
                                         <span id="demoText"></span>
                                     </div>
@@ -226,17 +210,20 @@
                     <!--</div>-->
                     <!--<div class="layui-col-xs8 layui-col-sm7 layui-col-md8">-->
                         <div class="grid-demo show_info">
+                            <p>用户账号：
+                                <span>{$info['info'][0]['userid']}</span>
+                            </p>
                             <p>用户昵称：
-                                <span>大黄蜂™</span>
+                                <span>{$info['info'][0]['nickname']}</span>
                             </p>
                             <p>用户性别：
-                                <span>女</span>
+                                <span>{$info['info'][0]['sex']}</span>
                             </p>
                             <p>验证邮箱：
-                                <span>896512547@qq.com</span>
+                                <span>{$info['info'][0]['email']}</span>
                             </p>
                             <p>登陆密码：
-                                <span>************</span>
+                                <span>{$info['info'][0]['password']}</span>
                             </p>
                             <p style="float: right">
                                 <button class="layui-btn"  data-toggle="modal" data-target="#alter_user"><i class="layui-icon">&#xe642;</i></button>
@@ -915,11 +902,13 @@
                         <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
                     </div>
                     <div class="panel-footer" style="background: none;">
-                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
+                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点</p>
                         <p>￥<em>59.00</em></p>
                         <p style="color: red">
                             <span>在售商品</span>
-                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
+                            <i class="layui-icon" style="float: right;cursor: pointer;font-size: 25px">&#xe640;</i>
+                            <i class="layui-icon" style="float: right;cursor: pointer;font-size: 25px">&#xe640;</i>
+                            <i class="layui-icon" style="float: right;cursor: pointer;font-size: 25px">&#xe640;</i>
                         </p>
                     </div>
                 </div>
@@ -933,5 +922,10 @@
 <div class="foot"></div>
 </div>
 </body>
+<script>
+    var exit_login="{:url('user/User/exitLogin')}";
+    var go_login="{:url('user/User/login')}";
+    var alter_heading="{:url('user/User/alterHead')}";
+</script>
 <script src="__JS__/font/user.js"></script>
 </html>

@@ -42,8 +42,8 @@ return [
     'default_timezone'       => 'PRC',
     // 是否开启多语言
     'lang_switch_on'         => false,
-    // 默认全局过滤方法 用逗号分隔多个
-    'default_filter'         => '',
+    // 默认全局过滤方法 用逗号分隔多个 添加了去除尖括号 单引号 双引号 转译处理
+    'default_filter'         => 'strip_tags,addslashes',
     // 默认语言
     'default_lang'           => 'zh-cn',
     // 应用类库后缀
@@ -62,7 +62,7 @@ return [
     // 默认控制器名
     'default_controller'     => 'User',
     // 默认操作名
-    'default_action'         => 'usercenter',
+    'default_action'         => 'userCenter',
     // 默认验证器
     'default_validate'       => '',
     // 默认的空控制器名
@@ -236,4 +236,45 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+    'Captcha' => [
+        'imageH'   =>   50,
+        'fontttf'  => '5.ttf',
+        'fontSize' => 22,
+        'length' => 4
+    ],
+    //错误信息提示 代码
+    'errorMsg' => [
+        'register' =>[
+            'account_err' => ['msg'=>'账号已被注册','code'=>'9001','data',[]],
+            'account_ok' => ['msg'=>'账号合法','code'=>'9000','data',[]],
+            'register_ok' => ['msg'=>'注册成功','code'=>'9000','data',[]],
+            'register_fail' => ['msg'=>'注册失败','code'=>'9002','data',[]],
+            'register_code' => ['msg'=>'验证码错误','code'=>'9003','data',[]]
+        ],
+        'login' =>[
+            'code_err' => ['msg'=>'验证码错误','code'=>'1000','data',[]],
+            'code_ok' => ['msg'=>'登陆成功','code'=>'0','data',[]],
+            'code_fail' =>  ['msg'=>'登陆失败,账号或者密码错误','code'=>'1001','data',[]],
+            'code_over' =>  ['msg'=>'登陆超时','code'=>'1002','data',[]],
+            'code_lock' =>  ['msg'=>'该用户违规操作已被锁定','code'=>'1003','data',[]]
+        ],
+        'exitLogin' => [
+            'code_ok' => ['msg'=>'注销成功','code'=>'0','data',[]],
+            'code_fail' =>  ['msg'=>'注销失败','code'=>'1001','data',[]]
+        ],
+        'operation' =>[
+            'delete' =>[
+                'code_ok' => ['msg'=>'删除成功','code'=>'0','data',[]],
+                'code_fail' =>  ['msg'=>'删除失败','code'=>'1001','data',[]]
+            ],
+            'update' =>[
+                'code_ok' => ['msg'=>'更新成功','code'=>'0','data',[]],
+                'code_fail' =>  ['msg'=>'更新失败','code'=>'1001','data',[]]
+            ],
+            'add' =>[
+                'code_ok' => ['msg'=>'添加成功','code'=>'0','data',[]],
+                'code_fail' =>  ['msg'=>'添加失败','code'=>'1001','data',[]]
+            ]
+        ]
+    ]
 ];

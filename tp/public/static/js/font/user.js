@@ -49,10 +49,10 @@ $(function(){
     layui.use('upload', function() {
         var $ = layui.jquery ,
             upload = layui.upload;
-        //普通图片上传
+        //修改头像
         var uploadInst = upload.render({
             elem: '#heading',
-            url: '/upload/',
+            url: alter_heading,
             before: function (obj) {
                 //预读本地文件示例，不支持ie8
                 console.log(obj);
@@ -62,10 +62,10 @@ $(function(){
             },
             done: function (res) {
                 //如果上传失败
-                if (res.code > 0) {
-                    return layer.msg('上传失败');
+                layer.msg('头像'+res.msg);
+                if(res.code==0){
+                    location.reload();
                 }
-                //上传成功
             },
             error: function () {
                 //演示失败状态，并实现重传
@@ -105,42 +105,6 @@ $(function(){
                 //预读本地文件示例，不支持ie8
                 obj.preview(function(index, file, result){
                     $('#more_picture').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img" style="width: 120px;height: 120px">');
-                });
-            },
-            done: function(res){
-                //上传完毕
-            }
-        });
-
-        //上传商品默认图片--拍卖商品
-        upload.render({
-            elem: '#action_default',
-            url: '/upload/',
-            before: function (obj) {
-                //预读本地文件示例，不支持ie8
-                console.log(obj);
-                obj.preview(function (index, file, result) {
-                    $('#action_default_img').attr('src', result); //图片链接（base64）
-                });
-            },
-            done: function (res) {
-                //如果上传失败
-                if (res.code > 0) {
-                    return layer.msg('上传失败');
-                }
-                //上传成功
-            }
-        });
-
-        //上传详情商品--多张--拍卖商品
-        upload.render({
-            elem: '#moreAction_pic_btn',
-            url: '/upload/',
-            multiple: true,
-            before: function(obj){
-                //预读本地文件示例，不支持ie8
-                obj.preview(function(index, file, result){
-                    $('#moreAction_picture').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img" style="width: 120px;height: 120px">');
                 });
             },
             done: function(res){
@@ -191,12 +155,37 @@ var app=new Vue({
         ]//option数据
     },
     methods:{
+        //拍卖商品和普通商品发布页面切换
         actionType:function(){
             if(this.selected==2){
              this.judge=true;
             }else{
                 this.judge=false;
             }
+        },
+        //退出登陆事件
+        exitLogin:function(){
+            layer.confirm("确定退出登陆？",{icon:3, title:'提示信息'},function(){
+                $.ajax({
+                    type:'post',
+                    url:exit_login,
+                    dataType:'text',
+                    success:function(res){
+                        var result=JSON.parse(res);
+                        var shut=layer.open({
+                            content:result.msg,
+                            closeBtn:false,
+                            yes:function(){
+                                if(result.code==0){
+                                    location.href=go_login;
+                                }else{
+                                    layer.close(shut);
+                                }
+                            }
+                        })
+                    }
+                });
+            });
         }
     }
 });

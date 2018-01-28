@@ -5,6 +5,8 @@
     <title>换换商城注册页面</title>
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="__CSS__/font/login.css" rel="stylesheet"/>
+    <script src="__STATIC__/public/jquery.js"></script>
+    <script src="__STATIC__/layui/layui.all.js"></script>
 </head>
 <body>
 <div id="exit">
@@ -15,17 +17,17 @@
         <form>
             <ul>
                 <li style='margin: 25px 0 25px 55px;text-align: center'><p style='font-size: 30px;font-family: 楷体;color:orange;'>换换商城注册</p></li>
-                <li><input type='text'  placeholder='手机号/邮箱' name='user'/></li>
+                <li><input type='text' placeholder='手机号/邮箱' name='user'/></li>
                 <li class='check'></li>
-                <li><input type='password'  placeholder='输入密码' name='password'/></li>
+                <li><input type='password' placeholder='输入密码' name='password'/></li>
                 <li class='check'></li>
-                <li><input type='password'  placeholder='再次输入密码' name='password'/></li>
+                <li><input type='password' placeholder='再次输入密码' name='rePassword'/></li>
                 <li class='check'></li>
                 <li><input type='text' value="" placeholder='验证码' name='code'/>
                     <div   style="margin-top: 10px"><img src="{:captcha_src()}" alt="captcha" class="changeImg"/></div>
                 </li>
-                <li class='check'></li>
-                <li class='check' style="text-align: left;margin-top: 50px">
+                <li class='check' style="margin-top:55px"></li>
+                <li class='check' style="text-align: left;">
                     <input type="checkbox" placeholder="" checked style="display: inline-block;width:15px;height: 15px"/>
                     我已阅读并同意《隐私权条款》和《换换使用协议》
                 </li>
@@ -37,41 +39,14 @@
     </div><!--class='loginUI'-->
 </div><!--class='loginMain'-->
 </body>
-<script src="__STATIC__/public/jquery.js"></script>
 <script>
-    $(function(){
-        //验证码刷新事件
-        $(".changeImg").click(function(){
-            $(this).attr("src","{:captcha_src()}?"+Math.random());
-        });
-        //返回网站首页
-        $("#exit").click(function(){
-            //window.location.href='{{:url("user/user/exitLogin")}}';
-        });
-        //前往登陆页面
-        $(".gologin").click(function(){
-            window.location.href='{:url("user/user/login")}';
-        });
-        //注册表单提交事件
-        $(".register").click(function(){
-            $data={
-                "user":$("input[name='user']").val(),
-                "psd":$("input[name='password']").val(),
-                "code":$("input[name='code']").val()
-            };
-            $.ajax({
-                type:'post',
-                //url:'{:url("user/user/check_register")}',
-                data:$data,
-                success:function(res){
-                    var result=JSON.parse(res);
-                    alert(result.msg);
-                    if(result.code==0){
-                        //location.href="{:url('user/user/userCenter')}";
-                    }
-                }
-            })
-        });
+    //验证码刷新事件
+    $(".changeImg").click(function(){
+        $(this).attr("src","{:captcha_src()}?"+Math.random());
     });
+    var check_account="{:url('user/User/checkAccount')}";
+    var go_register="{:url('user/User/goRegister')}";
+    var go_login="{:url('user/User/login')}";
 </script>
+<script src="__JS__/font/register.js"></script>
 </html>
