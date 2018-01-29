@@ -42,7 +42,7 @@ class Register extends Controller
             'areas' => '',
             'birthday' =>'',
             'idcard' => '',
-            'phone' => '',
+            'phone' => $account,
             'money' => 0,
             'createtime' =>date('Y-m-d H:i:s',time()),
             'email' => '',

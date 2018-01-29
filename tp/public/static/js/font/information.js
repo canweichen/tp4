@@ -1,22 +1,6 @@
 /**
  * Created by BRUCE CHEN on 2018/1/28.
  */
-
-function checkName(){
-    var regName =/^[\u4e00-\u9fa5]{2,4}$/;
-    if(!regName.test(name)){
-          alert('真实姓名填写有误');
-           return false;
-    }
-}
-function checkIDNumber(){
-    var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-    if(!regIdNo.test(idNo)){
-        alert('身份证号填写有误');
-        return false;
-    }
-}
-
 var app=new Vue({
     el:'#information',
     data:{
@@ -36,10 +20,19 @@ var app=new Vue({
         province:110000,
         city:110100,
         area:110101,
+        //ajax请求定义全局变量 正则结果
         ID:false,
-        em:false
+        em:false,
+        //修改用户密码
+        old:'',
+        newPsd:'',
+        newRePsd:'',
+        oldPs:false,
+        show:go_show,
+        hide:go_hide
     },
     methods:{
+        //用户姓名正则验证
         checkName:function(){
             var name=this.name;
             if(name==""){
@@ -56,6 +49,7 @@ var app=new Vue({
                 }
             }
         },
+        //电子邮箱正则验证
         checkEmail:function(){
             var email=this.email;
             if(email==""){
@@ -85,6 +79,7 @@ var app=new Vue({
                 }
             }
         },
+        //身份证正则验证
         checkIDNum:function(){
             var idNo=this.IDNum;
             if(idNo==""){
@@ -114,6 +109,85 @@ var app=new Vue({
                 }
             }
         },
+        //验证旧密码是否正确
+        checkOldPsd:function(){
+            if(this.old!=""){
+                $.ajax({
+                    type:'post',
+                    url:check_old_psd,
+                    data:{old:this.old},
+                    success:function(res){
+                        $result=JSON.parse(res);
+                        if($result.code!='9000'){
+                            layer.msg('密码不匹配',{icon:2});
+                        }else{
+                            this.oldPs = true;
+                        }
+                    }.bind(this)
+                });
+            }else{
+                layer.msg("密码不为空",{icon:0});
+            }
+        },
+        //验证新密码的正则
+        checkNewPsd:function(){
+            if(this.newPsd!="" && this.old != this.newPsd){
+                if(this.newPsd.length>=6 && this.newPsd.length<=16){
+                    var regu = "^[0-9a-zA-Z]+$";
+                    var re = new RegExp(regu);
+                    var bool2=re.test(this.newPsd);
+                    if(bool2){
+                        return true;
+                    }else{
+                        layer.msg("用户密码只能由数字和字母组成,不能由特殊字符",{icon:0});
+                        return false;
+                    }
+                }else{
+                    layer.msg("用户密码长度由6-22位字符串组成",{icon:0});
+                    return false;
+                }
+            }else{
+                layer.msg("新密码不为空或者新旧密码不能一致",{icon:0});
+            }
+        },
+        //两次密码是否一致
+        checkNewRePsd:function(){
+          if(this.newRePsd != ""){
+              if(this.newPsd == this.newRePsd){
+                  return true;
+              }else{
+                  layer.msg('两次密码不一致',{icon:2});
+                  return false;
+              }
+          }else{
+              layer.msg('不为空',{icon:0});
+              return false;
+          }
+        },
+        //提交修改密码
+        keepPassword:function(){
+            if(this.checkNewPsd() && this.checkNewRePsd() && this.oldPs){
+                var data={
+                    newPsd:this.newPsd
+                };
+                $.ajax({
+                    type:'post',
+                    url:go_to_keep_password,
+                    data:data,
+                    success:function(res){
+                        var result=JSON.parse(res);
+                        if(result.code==0){
+                            layer.msg(result.msg,{icon:6},function(){
+                                location.reload();
+                            });
+                        }else{
+                            layer.msg(result.msg , {icon:5});
+                        }
+                    }
+                });
+            }
+        },
+        //获取省份
         getProvince:function(){
             $.ajax({
                 type:'post',
@@ -123,6 +197,7 @@ var app=new Vue({
                 }
             });
         },
+        //获取市区
         getCity:function(){
             $.ajax({
                 type:'post',
@@ -134,6 +209,7 @@ var app=new Vue({
                 }.bind(this)
             });
         },
+        //获取区县
         getArea:function(){
             if(this.city!=""){
                 $.ajax({
@@ -146,10 +222,9 @@ var app=new Vue({
                         this.area = JSON.parse(res)[0].areaid
                     }.bind(this)
                 });
-            }else{
-                alert(456);
             }
         },
+        //通过省份正号截取出生年月日
         spliceArr:function(){
             var arr=this.IDNum.substr(6,8).split('');
             var str='';
@@ -162,6 +237,7 @@ var app=new Vue({
             }
             return str;
         },
+        //保存用户资料信息
         saveUser:function(){
             if(this.checkName() && this.em && this.ID){
                 var data={

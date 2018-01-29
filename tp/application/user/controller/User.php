@@ -8,10 +8,6 @@ use think\Session;
 use \think\File;
 class User extends Controller
 {
-    public function index()
-    {
-        //return '<style type="text/css">*{ padding: 0; margin: 0; } .think_default_text{ padding: 4px 48px;} a{color:#2E5CD5;cursor: pointer;text-decoration: none} a:hover{text-decoration:underline; } body{ background: #fff; font-family: "Century Gothic","Microsoft yahei"; color: #333;font-size:18px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.6em; font-size: 42px }</style><div style="padding: 24px 48px;"> <h1>:)</h1><p> ThinkPHP V5<br/><span style="font-size:30px">十年磨一剑 - 为API开发设计的高性能框架</span></p><span style="font-size:22px;">[ V5.0 版本由 <a href="http://www.qiniu.com" target="qiniu">七牛云</a> 独家赞助发布 ]</span></div><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script><script type="text/javascript" src="http://ad.topthink.com/Public/static/client.js"></script><thinkad id="ad_bd568ce7058a1091"></thinkad>';
-    }
     /**operation:判断session是否存在
  * * user:陈灿伟
  * name:check_session
@@ -19,6 +15,7 @@ class User extends Controller
  * return:用户信息
  * time:2018.1.27
  * */
+    //检测是否处于登陆状态 2018/1/27 陈灿伟
     public function check_session(){
         // 判断think作用域下面是否赋值
         $bool=Session::has('user');
@@ -29,6 +26,7 @@ class User extends Controller
             return ['',0];
         }
     }
+    //个人中心 2018/1/27 陈灿伟
     public function userCenter(){
         $get_session=$this->check_session();
        if($get_session[1]){
@@ -41,10 +39,11 @@ class User extends Controller
             $this->assign("info",$data);
             return $this->fetch('userCenter');
         }else{
-            $this->error("非法闯入，跳转到网站首页","login/Login/login","",10);
+            $this->error("非法闯入，跳转到登陆页面","login/Login/login","",10);
            exit();
         }
     }
+    //修改用户头像 2018/1/27 陈灿伟
     public function alterHead(){
         // 获取表单上传文件 例如上传了001.jpg
         $file = request()->file('file');
@@ -75,9 +74,36 @@ class User extends Controller
             }
         }
     }
+    //个人高级信息修改页面 2018/1/29 陈灿伟
     public function information(){
-        return $this->fetch('information');
+        $session=$this->check_session();
+        if($session[1]){
+            $where=['userid' => $session[0][0]['userid']];
+            $user=Db::table('t_user')->where($where)->select();
+            //判断用户是否有邮箱验证 没有验证进行资料完善  验证了高级密码修改服务
+            if($user[0]['emailcheck']){
+                $show=[
+                    'show' => false ,
+                    'hide' => true
+                ];
+            }else{
+                $show=[
+                    'show' => true ,
+                    'hide' => false
+                ];
+            }
+            $data=[
+                'info' =>$user ,
+                'show_hide' => $show
+            ];
+            $this->assign("info",$data);
+            return $this->fetch('information');
+        }else{
+            $this->error("登陆超时，请重新登陆","login/Login/login","",10);
+            exit();
+        }
     }
+    //验证邮箱是否被占用 2018/1/28 陈灿伟
     public function checkEmail(){
         if($this->check_session()[1]){
             $email=input('?post.email')?input("email"):'';
@@ -92,6 +118,7 @@ class User extends Controller
             exit();
         }
     }
+    //验证身份证是否被占用 2018/1/28 陈灿伟
     public function checkIDNum(){
         if($this->check_session()[1]){
             $ID=input('?post.ID')?input("ID"):'';
@@ -106,6 +133,7 @@ class User extends Controller
             exit("登陆超时");
         }
     }
+    //获取省份 2018/1/28 陈灿伟
     public function getProvince(){
         if($this->check_session()[1]){
             $res=Db::table('provinces')->select();
@@ -114,6 +142,7 @@ class User extends Controller
             exit("登陆超时");
         }
     }
+    //获取市区 2018/1/28 陈灿伟
     public function getCity(){
         $province=input('?post.province')?input('province'):'';
         if($this->check_session()[1]){
@@ -123,6 +152,7 @@ class User extends Controller
             exit("登陆超时");
         }
     }
+    //获取地区 2018/1/28 陈灿伟
     public function getAreas(){
         $city=input('?post.city')?input('city'):'';
         if($this->check_session()[1]){
@@ -132,6 +162,7 @@ class User extends Controller
             exit("登陆超时");
         }
     }
+    //保存资料完善中的个人信息 2018/1/28 陈灿伟
     public function saveUser(){
         $session=$this->check_session();
         if($session[1]){
@@ -162,6 +193,67 @@ class User extends Controller
             }else{
                 echo json_encode(config('errorMsg')['register']['info_err']);
             }
+        }
+    }
+    //修改个人中心的个人信息 2018/1/29 陈灿伟
+    public function alterUser(){
+        $session=$this->check_session();
+        if($session[1]){
+            $name=input('?post.name')?input('name'):'';
+            $birth=input('?post.birth')?input('birth'):'';
+            $sex=input('?post.sex')?input('sex'):'';
+            $data=[
+                'nickname' => $name ,
+                'birthday' => $birth,
+                'sex' => $sex
+            ];
+            $res=Db::table('t_user')->where('userid',$session[0][0]['userid'])->update($data);
+            if($res){
+                echo json_encode(config('errorMsg')['operation']['update']['code_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['operation']['update']['code_fail']);
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //修改旧密码 2018/1/29 陈灿伟
+    public function checkOldPsd(){
+        $session=$this->check_session();
+        if($session[1]){
+            $old=input('?post.old')?input('old'):'';
+            $enOld=md5($old);
+            $where=[
+                'userid' => $session[0][0]['userid'],
+                'password' => $enOld
+            ];
+            $res=Db::table('t_user')->where($where)->select();
+            if(!empty($res)){
+                echo json_encode(config('errorMsg')['register']['info_password_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['register']['info_password_fail']);
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //保存修改后的密码 2018/1/29 陈灿伟
+    public function keepPassword(){
+        $session=$this->check_session();
+        if($session[1]){
+            $newPsd=input('?post.newPsd')?input('newPsd'):'';
+            $enNewPsd=md5($newPsd);
+            $where=[
+                'password' => $enNewPsd
+            ];
+            $res=Db::table('t_user')->where('userid',$session[0][0]['userid'])->update($where);
+            if(!empty($res)){
+                echo json_encode(config('errorMsg')['operation']['update']['code_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['operation']['update']['code_fail']);
+            }
+        }else{
+            exit('登陆超时');
         }
     }
 }

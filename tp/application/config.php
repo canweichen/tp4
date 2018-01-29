@@ -253,7 +253,9 @@ return [
             'register_email' => ['msg'=>'邮箱已被占用','code'=>'9004','data',[]],
             'register_email_ok' => ['msg'=>'邮箱合法','code'=>'9000','data',[]],
             'info_ok' => ['msg'=>'资料提交成功','code'=>'9000','data',[]],
-            'info_err' => ['msg'=>'资料提交失败','code'=>'9005','data',[]]
+            'info_err' => ['msg'=>'资料提交失败','code'=>'9005','data',[]],
+            'info_password_ok' => ['msg'=>'密码正确','code'=>'9000','data',[]],
+            'info_password_fail' => ['msg'=>'密码错误','code'=>'9006','data',[]]
         ],
         'login' =>[
             'code_err' => ['msg'=>'验证码错误','code'=>'1000','data',[]],
@@ -272,8 +274,8 @@ return [
                 'code_fail' =>  ['msg'=>'删除失败','code'=>'1001','data',[]]
             ],
             'update' =>[
-                'code_ok' => ['msg'=>'更新成功','code'=>'0','data',[]],
-                'code_fail' =>  ['msg'=>'更新失败','code'=>'1001','data',[]]
+                'code_ok' => ['msg'=>'修改成功','code'=>'0','data',[]],
+                'code_fail' =>  ['msg'=>'修改失败','code'=>'1001','data',[]]
             ],
             'add' =>[
                 'code_ok' => ['msg'=>'添加成功','code'=>'0','data',[]],

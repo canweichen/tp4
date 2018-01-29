@@ -52,4 +52,27 @@
     width:20%;
     display: inline;
 }
-
+.info>p{
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+}
+.userInfo>p{
+    text-align: left;
+    line-height: 60px;
+    height: 60px;
+}
+.userInfo>p>span{
+    font-size: 20px;
+    color: #757575;
+    display: inline-block;
+    margin-left: 2%;
+}
+.userInfo>p>button{
+    float: right;
+}
+.tipInfo{
+    height: 20px;
+    line-height: 20px;
+    color:orange;
+}

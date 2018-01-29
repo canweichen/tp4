@@ -143,6 +143,35 @@ $(function(){
             ,type: 'datetime'
         });
     });
+   //设置性别默认选中状态
+    $("#openShade").click(function(){
+       if(go_sex=='女'){
+           $('input[name="uSex"]:last').attr("checked",'checked');
+       }
+    });
+    //修改用户个人资料 姓名 生日 性别
+    $("#alterUser").click(function(){
+        var name=$("input[name='uName']").val();
+        var birth=$("input[name='uBirth']").val();
+        var sex=$("input[name='uSex']:checked").val();
+        if(name!='' && birth!='' && sex!=''){
+            $.ajax({
+                type:'post',
+                url:go_alter_user,
+                data:{name:name,birth:birth,sex:sex},
+                success:function(res){
+                    var result=JSON.parse(res);
+                    layer.msg(result.msg ,{icon:6} , function(){
+                        if(result.code==0){
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        }else{
+          layer.msg("姓名不能为空" ,{icon:0});
+        }
+    })
 });
 var app=new Vue({
     el:'#my_app',

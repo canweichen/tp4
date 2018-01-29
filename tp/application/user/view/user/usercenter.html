@@ -107,23 +107,28 @@
 <!---修改用户基本信息弹层----->
 <div class="modal fade" id="alter_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" style="margin-top: 180px">
+        <div class="modal-content" style="margin-top: 250px">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="alter_title">修改用户信息</h4>
             </div>
-            <div class="modal-body" style="height: 300px">
+            <div class="modal-body" style="height: 200px">
                 <form>
                     <div class="form-group" style="text-align: center">
-                        <input type="text" class="form-control" placeholder="姓名" style="width: 80%;height: 50px;display: inline-block;margin-bottom: 20px">
-                        <input type="text" class="form-control"  placeholder="性别" style="width: 80%;height: 50px;display: inline-block;margin-bottom:20px">
-                        <input type="text" class="form-control" placeholder="邮箱" style="width: 80%;height: 50px;display: inline-block;margin-bottom:20px">
-                        <input type="text" class="form-control" placeholder="密码" style="width: 80%;height: 50px;display: inline-block">
-                    </div>
+                        <input type="text" class="form-control" value={$info['info'][0]['nickname']} name="uName" placeholder="姓名" style="width: 80%;height: 50px;display: inline-block;margin-bottom: 20px">
+                        <input type="date" class="form-control" value={$info['info'][0]['birthday']} name='uBirth' placeholder="生日" style="width: 80%;height: 50px;display: inline-block;margin-bottom:20px">
+                        <br>
+                        <p>
+                            <i class="layui-icon" style="color:blue;">&#xe662;</i>
+                            <input type="radio" class="form-control" checked  value='男' name="uSex" placeholder="性别" style="width:5%;height: 20px;display: inline-block;margin-bottom:20px">
+                            <i class="layui-icon" style="color:red;">&#xe661;</i>
+                            <input type="radio" class="form-control" value='女' name="uSex" placeholder="性别" style="width: 5%;height: 20px;display: inline-block;margin-bottom:20px">
+                        </p>
+                       </div>
                 </form>
             </div>
             <div class="modal-footer" style="text-align: center">
-                <button type="button" class="btn btn-primary btn-lg">保存</button>
+                <button type="button" class="btn btn-primary btn-lg" id="alterUser">保存</button>
                 <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">关闭</button>
             </div>
         </div>
@@ -220,14 +225,11 @@
                             <p>用户性别：
                                 <span>{$info['info'][0]['sex']}</span>
                             </p>
-                            <p>验证邮箱：
-                                <span>{$info['info'][0]['email']}</span>
-                            </p>
                             <p>用户生日：
                                 <span>{$info['info'][0]['birthday']}</span>
                             </p>
                             <p style="float: right">
-                                <button class="layui-btn"  data-toggle="modal" data-target="#alter_user"><i class="layui-icon">&#xe642;</i></button>
+                                <button class="layui-btn"  data-toggle="modal" data-target="#alter_user" id="openShade"><i class="layui-icon">&#xe642;</i></button>
                             </p>
                         </div> <!--grid-demo-->
                    <!-- </div>-->
@@ -833,18 +835,20 @@
                                 </div>
                                 <!--商品分类 自定义class为select_mod-->
                                 <div>
-                                    <select class="form-control input-lg select_mod" style="margin-top: 10px;">
-                                        <option>商品类型</option>
-                                        <option>数码</option>
-                                    </select>
-                                    <select class="form-control input-lg select_mod">
-                                        <option>商品品牌</option>
-                                        <option>数码</option>
-                                    </select>
-                                    <select class="form-control input-lg select_mod">
-                                        <option>新旧程度</option>
-                                        <option>九五新</option>
-                                    </select>
+                                    <label>
+                                        <select class="form-control input-lg select_mod" style="margin-top: 10px;">
+                                            <option>商品类型</option>
+                                            <option>数码</option>
+                                        </select>
+                                        <select class="form-control input-lg select_mod">
+                                            <option>商品品牌</option>
+                                            <option>数码</option>
+                                        </select>
+                                        <select class="form-control input-lg select_mod">
+                                            <option>新旧程度</option>
+                                            <option>九五新</option>
+                                        </select>
+                                    </label>
                                 </div>
                                 <!--商品价格 自定义id为normal_price 和 normal_old_price-->
                                 <br>
@@ -858,18 +862,20 @@
                                     </div>
                                 <!--省 市 区联动 自定义class为select_mod-->
                                 <div style="font-size: 15px">
-                                    <select class="form-control input-lg select_mod" style="margin-top: 10px">
-                                        <option>省份</option>
-                                        <option>福建省</option>
-                                    </select>
-                                    <select class="form-control input-lg select_mod">
-                                        <option>市区</option>
-                                        <option>福州市</option>
-                                    </select>
-                                    <select class="form-control input-lg select_mod">
-                                        <option>区县</option>
-                                        <option>仓山区</option>
-                                    </select>
+                                    <label>
+                                        <select class="form-control input-lg select_mod" style="margin-top: 10px">
+                                            <option>省份</option>
+                                            <option>福建省</option>
+                                        </select>
+                                        <select class="form-control input-lg select_mod">
+                                            <option>市区</option>
+                                            <option>福州市</option>
+                                        </select>
+                                        <select class="form-control input-lg select_mod">
+                                            <option>区县</option>
+                                            <option>仓山区</option>
+                                        </select>
+                                    </label>
                                 </div>
                                 <!--商品描述/基本信息介绍-->
                                 <br>
@@ -927,6 +933,8 @@
     var exit_login="{:url('login/Login/exitLogin')}";
     var go_login="{:url('login/Login/login')}";
     var alter_heading="{:url('user/User/alterHead')}";
+    var go_alter_user="{:url('user/User/alterUser')}";
+    var go_sex="{$info['info'][0]['sex']}";
 </script>
 <script src="__JS__/font/user.js"></script>
 </html>

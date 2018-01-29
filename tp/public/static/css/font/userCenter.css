@@ -45,7 +45,7 @@
 
 /*------------user start css----------------*/
 .user{
-    display: none;
+    display: block;
     text-align: center;
 }
 #images{
@@ -181,7 +181,7 @@
 /*----------public_normal end css------------------*/
 /*----------public_action start css------------------*/
 .myGoods{
-    display: block;
+    display: none;
 }
 .myGoods>.panel{
     float: left;

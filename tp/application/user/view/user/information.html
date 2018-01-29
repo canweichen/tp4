@@ -33,6 +33,58 @@
 </head>
 <body>
 <div id="information">
+    <!--修改密码模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="password">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content" style="margin-top: 200px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">修改登陆密码</h4>
+            </div>
+            <div class="modal-body" style="text-align: center">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <input type="password" class="form-control input-lg" v-model="old" @blur="checkOldPsd()" placeholder="旧密码">
+                    </div>
+                    <p class="tipInfo">原密码</p>
+                    <div class="form-group">
+                        <input type="password" class="form-control input-lg" v-model="newPsd" @blur="checkNewPsd()" placeholder="新密码">
+                    </div>
+                    <p class="tipInfo">新密码</p>
+                    <div class="form-group">
+                        <input type="password" class="form-control input-lg" v-model="newRePsd" @blur="checkNewRePsd" placeholder="确认新密码">
+                    </div>
+                    <p class="tipInfo">确认新密码</p>
+                </form>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" class="btn btn-primary" @click="keepPassword()">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!--短信验证模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="checkAll">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="margin-top: 200px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">手机短信验证</h4>
+                </div>
+                <div class="modal-body" style="text-align: center">
+                    <p>为了保护帐号安全，需要验证手机有效性</p>
+                    <p>点击发送短信按钮，将会发送一条有验证码的短信至手机
+                        <span>{$info['info'][0]['phone']}</span>
+                    </p>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" class="btn btn-primary">确定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 <div class="safeWidth head">
     <span>换换账号中心</span>
         <a href="{:url('user/User/userCenter')}">
@@ -40,7 +92,7 @@
         </a>
 </div>
 <div class="safeWidth">
-    <div class="panel panel-default">
+    <div class="panel panel-default" v-if='show'>
         <div class="panel-heading title">完善个人资料</div>
         <div class="panel-body info">
             <input class="form-control input-lg" type="text" placeholder="姓名" v-model="name" @blur="checkName()">
@@ -70,17 +122,44 @@
             <button class="btn btn-primary btn-lg" style="margin-top: 20px" @click="saveUser()">保存</button>
         </div>
     </div>
+    <div class="panel panel-default" v-if='hide'>
+        <div class="panel-heading title">账号管理</div>
+        <div class="panel-body userInfo">
+            <p>
+                <i class="glyphicon glyphicon-lock" style="font-size: 15px;color: orangered;"></i>
+                <span style="height: 30px;line-height: 30px;display: inline-block">账号密码</span>
+                <i>保护账号信息和登陆安全</i>
+                <button type="button" class="alterPassword btn btn-primary" data-toggle="modal" data-target="#password">修改</button>
+            </p>
+            <p>
+                <i class="glyphicon glyphicon-envelope" style="font-size: 15px;color: orangered"></i>
+                <span>安全邮箱</span>
+                <i>133086@qq.com</i>
+                <button type="button" class="alterEmail btn btn-primary"  data-toggle="modal" data-target="#checkAll">修改</button>
+            </p>
+            <p>
+                <i class="glyphicon glyphicon-phone" style="font-size:15px;color: orangered;"></i>
+                <span>安全手机</span>
+                <i>{$info['info'][0]['phone']}</i>
+                <button type="button" class="alterPhone btn btn-primary"   data-toggle="modal" data-target="#checkAll">修改</button>
+            </p>
+        </div>
+    </div>
 </div>
 </div>
 </body>
 <script>
     var check_email='{:url("user/User/checkEmail")}';
     var check_IDNum='{:url("user/User/checkIDNum")}';
+    var check_old_psd='{:url("user/User/checkOldPsd")}';
+    var go_to_keep_password='{:url("user/User/keepPassword")}';
     var get_province='{:url("user/User/getProvince")}';
     var get_city='{:url("user/User/getCity")}';
     var get_areas='{:url("user/User/getAreas")}';
     var save_user='{:url("user/User/saveUser")}';
     var go_userCenter='{:url("user/User/userCenter")}';
+    var go_show="{$info['show_hide']['show']}";
+    var go_hide="{$info['show_hide']['hide']}";
 </script>
 <script src="__JS__/font/information.js"></script>
 </html>
