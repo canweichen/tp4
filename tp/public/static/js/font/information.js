@@ -193,8 +193,10 @@ var app=new Vue({
                 type:'post',
                 url:get_province,
                 success:function(res){
-                    return JSON.parse(res);
-                }
+                    this.provinceList=JSON.parse(res);
+                    this.province = JSON.parse(res)[0].provinceid;
+                    this.getCity();
+                }.bind(this)
             });
         },
         //获取市区
@@ -205,7 +207,8 @@ var app=new Vue({
                 data:{"province":this.province},
                 success:function(res){
                     this.cityList=JSON.parse(res);
-                    this.city = JSON.parse(res)[0].cityid
+                    this.city = JSON.parse(res)[0].cityid;
+                    this.getArea();
                 }.bind(this)
             });
         },
@@ -217,7 +220,6 @@ var app=new Vue({
                     url:get_areas,
                     data:{"city":this.city},
                     success:function(res){
-                        alert(123);
                         this.areasList=JSON.parse(res);
                         this.area = JSON.parse(res)[0].areaid
                     }.bind(this)
@@ -274,7 +276,8 @@ var app=new Vue({
     },
     mounted: function () {
         //初始化省市区
-        $.ajax({
+        this.getProvince();
+     /*   $.ajax({
             type:'post',
             url:get_province,
             success:function(res){
@@ -296,7 +299,7 @@ var app=new Vue({
             success:function(res){
                 this.areasList=JSON.parse(res);
             }.bind(this)
-        });
+        });*/
     }
 });
 

@@ -52,6 +52,10 @@
             .content_middle{
                 display: none;
             }
+            /*-----------地址在小屏下占满屏幕---------*/
+            .address>div{
+                width:90%;
+            }
         }
     </style>
 </head>
@@ -60,56 +64,58 @@
 <!--移动端模态框-->
 <div id="mobile"></div>
 <!--添加/修改地址模态框-->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" style="background: rgba(0,0,0,0.8)">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="margin-top: 180px">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="exampleModalLabel">添加收货地址</h4>
+                <h4 class="modal-title" id="exampleModalLabel">{{ navMessage }}</h4>
             </div>
             <div class="modal-body" style="height: 380px">
                 <form>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="姓名" style="width: 40%;height: 50px;display: inline-block">
-                        <input type="text" class="form-control"  placeholder="手机号" style="width: 50%;height: 50px;display: inline-block">
+                        <input type="text" class="form-control" v-model="receiver" placeholder="姓名" style="width: 40%;height: 50px;display: inline-block">
+                        <input type="text" class="form-control" v-model="telephone"  placeholder="手机号" style="width: 50%;height: 50px;display: inline-block">
                     </div>
+                    <!--省份-->
                     <div  class="form-group">
-                        <select name="quiz1" class="form-control" style="height: 50px;">
-                            <option value="" selected="">请选择省</option>
-                            <option >浙江省</option>
+                        <select v-model="province" @change="getCity([1,1,1])"  class="form-control" style="height: 50px;">
+                            <option v-for="x in provinceList" :value="x.provinceid" province>{{ x.province }}</option>
                         </select>
                     </div>
+                    <!--市区-->
                     <div  class="form-group">
-                        <select name="quiz2" class="form-control" style="height: 50px;">
-                            <option value="">请选择市</option>
-                            <option value="杭州">杭州</option>
+                        <select v-model="city" @change="getArea([1,1,1])" name="quiz2" class="form-control" style="height: 50px;">
+                            <option v-for="y in cityList" :value="y.cityid">{{ y.city }}</option>
                         </select>
                     </div>
+                    <!--区县-->
                     <div  class="form-group">
-                        <select name="quiz3" class="form-control" style="height: 50px;">
-                            <option value="">请选择县/区</option>
-                            <option value="西湖区">西湖区</option>
+                        <select v-model="area" name="quiz3" class="form-control" style="height: 50px;">
+                            <option v-for="z in areasList" :value="z.areaid">{{ z.area }}</option>
                         </select>
                     </div>
                     <div class="form-group">
-
-                        <textarea class="form-control" id="message-text" placeholder="详细住址"></textarea>
+                        <textarea class="form-control" id="message-text" v-model="details" placeholder="详细住址"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" placeholder=""  v-model="defaultAdd" style="display: inline-block;width: 16px;height: 16px"/>
+                        <span style="display: inline-block;font-size: 15px;">设为默认地址</span>
                     </div>
                 </form>
             </div>
             <div class="modal-footer" style="text-align: center">
-                <button type="button" class="btn btn-primary btn-lg">保存</button>
+                <button type="button" class="btn btn-primary btn-lg" v-if="seem" @click="saveAddress()">保存</button>
+                <button type="button" class="btn btn-primary btn-lg" v-else  @click="alterFromAddress()">保存修改</button>
                 <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
 </div>
 <!---修改用户基本信息弹层----->
-<div class="modal fade" id="alter_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+<div class="modal fade" id="alter_user" tabindex="-1" role="dialog"  style="background: rgba(0,0,0,0.8)" aria-labelledby="exampleModalLabel" data-backdrop="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="margin-top: 250px">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="alter_title">修改用户信息</h4>
             </div>
             <div class="modal-body" style="height: 200px">
@@ -160,13 +166,13 @@
 <div class="content layui-row">
     <!--左边菜单栏-->
         <div class="content_left layui-col-md3 layui-col-sm3 layui-col-xs3">
-            <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="demo" style="width:100%">
+            <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="demo" style="width:100%;">
                     <!--lay-filter监听导航点击事件-->
                     <li class="layui-nav-item layui-nav-itemed">
                         <a>个人中心</a>
                         <dl class="layui-nav-child">
-                            <dd id="1"><a href="javascript:;">个人信息</a></dd>
-                            <dd id="2"><a href="javascript:;">收货地址</a></dd>
+                            <dd id="1"><a href="{:url('user/User/userCenter')}?who=1">个人信息</a></dd>
+                            <dd id="2"><a href="{:url('user/User/userCenter')}?who=2">收货地址</a></dd>
                             <dd id="3"><a href="javascript:;">我的收藏</a></dd>
                             <dd id="4"><a href="javascript:;">财务明细</a></dd>
                             <dd id="5"><a href="javascript:;">我的消息</a></dd>
@@ -240,90 +246,42 @@
                 <h1  style="text-align: left">收货地址</h1>
                 <!--添加地址-->
                 <div class="add_address">
-                    <i class="layui-icon" data-toggle="modal" data-target="#exampleModal" style="">&#xe61f;</i>
+                    <i class="layui-icon" data-toggle="modal" data-target="#exampleModal" @click="addAddress()">&#xe61f;</i>
                     <p>添加新地址</p>
                 </div>
                 <!--显示地址-->
-                <div class="show_address">
-                    <p style="font-size: 18px;margin: 10px 0 10px 5%">欧阳飞雪</p>
-                    <p>18059310026</p>
+                <div class="show_address" v-for="address in addressList">
+                    <p style="font-size: 18px;margin: 10px 0 10px 5%">{{ address.receivername }}</p>
+                    <p>{{ address.phone }}</p>
                     <p>
-                        <span>福建省</span>
-                        <span>福州市</span>
-                        <span>仓山区</span>
+                        <span>{{ address.provinces }}</span>
+                        <span>{{ address.cities }}</span>
+                        <span>{{ address.areas }}</span>
                     </p>
-                    <p>金山金榕南路创意园5号楼3楼接电话方便还是看是不是就看看手机</p>
+                    <p>{{ address.content }}</p>
                     <p></p>
                     <!--layer 按钮组件 编辑 删除-->
                     <div class="layui-btn-group operation_btn">
-                        <button class="layui-btn layui-btn-primary layui-btn-sm">
+                        <button class="layui-btn layui-btn-primary layui-btn-sm"  v-if="address.addressflag" @click="alreadyAddress()">
+                            <i class="layui-icon" style="color:orangered;">&#xe618;默认地址</i>
+                        </button>
+                        <button class="layui-btn layui-btn-primary layui-btn-sm"  v-else  @click="defaultAddress(address.addressid)">
+                            <i class="layui-icon">设为默认地址</i>
+                        </button>
+                        <button class="layui-btn layui-btn-primary layui-btn-sm" @click="alterAddress(address.addressid)" data-toggle="modal" data-target="#exampleModal">
                             <i class="layui-icon">&#xe642;</i>
                         </button>
-                        <button class="layui-btn layui-btn-primary layui-btn-sm">
+                        <button class="layui-btn layui-btn-primary layui-btn-sm" @click="deleteAddress(address.addressid)">
                             <i class="layui-icon">&#xe640;</i>
                         </button>
                     </div>
                 </div>
-                <div class="show_address">
-                    <p style="font-size: 18px;margin: 10px 0 10px 5%">欧阳飞雪</p>
-                    <p>18059310026</p>
-                    <p>
-                        <span>福建省</span>
-                        <span>福州市</span>
-                        <span>仓山区</span>
-                    </p>
-                    <p>金山金榕南路创意园5号楼3楼接电话方便还是看是不是就看看手机</p>
-                    <p></p>
-                    <!--layer 按钮组件 编辑 删除-->
-                    <div class="layui-btn-group operation_btn">
-                        <button class="layui-btn layui-btn-primary layui-btn-sm">
-                            <i class="layui-icon">&#xe642;</i>
-                        </button>
-                        <button class="layui-btn layui-btn-primary layui-btn-sm">
-                            <i class="layui-icon">&#xe640;</i>
-                        </button>
-                    </div>
-                </div>
-                <div class="show_address">
-                    <p style="font-size: 18px;margin: 10px 0 10px 5%">欧阳飞雪</p>
-                    <p>18059310026</p>
-                    <p>
-                        <span>福建省</span>
-                        <span>福州市</span>
-                        <span>仓山区</span>
-                    </p>
-                    <p>金山金榕南路创意园5号楼3楼接电话方便还是看是不是就看看手机</p>
-                    <p></p>
-                    <!--layer 按钮组件 编辑 删除-->
-                    <div class="layui-btn-group operation_btn">
-                        <button class="layui-btn layui-btn-primary layui-btn-sm">
-                            <i class="layui-icon">&#xe642;</i>
-                        </button>
-                        <button class="layui-btn layui-btn-primary layui-btn-sm">
-                            <i class="layui-icon">&#xe640;</i>
-                        </button>
-                    </div>
-                </div>
-                <div class="show_address">
-                    <p style="font-size: 18px;margin: 10px 0 10px 5%">欧阳飞雪</p>
-                    <p>18059310026</p>
-                    <p>
-                        <span>福建省</span>
-                        <span>福州市</span>
-                        <span>仓山区</span>
-                    </p>
-                    <p>金山金榕南路创意园5号楼3楼接电话方便还是看是不是就看看手机</p>
-                    <p></p>
-                    <!--layer 按钮组件 编辑 删除-->
-                    <div class="layui-btn-group operation_btn">
-                        <button class="layui-btn layui-btn-primary layui-btn-sm">
-                            <i class="layui-icon">&#xe642;</i>
-                        </button>
-                        <button class="layui-btn layui-btn-primary layui-btn-sm">
-                            <i class="layui-icon">&#xe640;</i>
-                        </button>
-                    </div>
-                </div>
+                <ul class="pagination">
+                    <li><a href="?page=1&who=2">&laquo;</a></li>
+                    <li  class="active"><a href="?page=1&who=2">1</a></li>
+                    <li><a href="?page=1&who=2">2</a></li>
+                    <li class="disabled"><span>&raquo;</span></li>
+                </ul>
             </div>
             <div class="collect">
                 <h1 style="text-align: left">我的收藏</h1>
@@ -932,9 +890,21 @@
 <script>
     var exit_login="{:url('login/Login/exitLogin')}";
     var go_login="{:url('login/Login/login')}";
+    /*---个人中心用户信息修改--*/
     var alter_heading="{:url('user/User/alterHead')}";
     var go_alter_user="{:url('user/User/alterUser')}";
     var go_sex="{$info['info'][0]['sex']}";
+    /*---获取省市区三级联动路径--*/
+    var get_province='{:url("user/User/getProvince")}';
+    var get_city='{:url("user/User/getCity")}';
+    var get_areas='{:url("user/User/getAreas")}';
+    var go_to_address='{:url("user/User/saveAddress")}';
+    var go_address_delete='{:url("user/User/deleteAddress")}';
+    var go_address_default='{:url("user/User/defaultAddress")}';
+    var go_address_alter='{:url("user/User/alterAddress")}';
+    var go_get_address_information='{:url("user/User/getAddressById")}';
+    var show_to_address=JSON.parse('{$info["address"]}').data;
+    console.log(show_to_address);
 </script>
 <script src="__JS__/font/user.js"></script>
 </html>

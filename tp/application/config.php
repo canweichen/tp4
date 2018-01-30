@@ -19,7 +19,7 @@ return [
     // 应用调试模式
     'app_debug'              => true,
     // 应用Trace
-    'app_trace'              => false,
+    'app_trace'              => true,
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -245,42 +245,46 @@ return [
     //错误信息提示 代码
     'errorMsg' => [
         'register' =>[
-            'account_err' => ['msg'=>'账号已被注册','code'=>'9001','data',[]],
-            'account_ok' => ['msg'=>'账号合法','code'=>'9000','data',[]],
-            'register_ok' => ['msg'=>'注册成功','code'=>'9000','data',[]],
-            'register_fail' => ['msg'=>'注册失败','code'=>'9002','data',[]],
-            'register_code' => ['msg'=>'验证码错误','code'=>'9003','data',[]],
-            'register_email' => ['msg'=>'邮箱已被占用','code'=>'9004','data',[]],
-            'register_email_ok' => ['msg'=>'邮箱合法','code'=>'9000','data',[]],
-            'info_ok' => ['msg'=>'资料提交成功','code'=>'9000','data',[]],
-            'info_err' => ['msg'=>'资料提交失败','code'=>'9005','data',[]],
-            'info_password_ok' => ['msg'=>'密码正确','code'=>'9000','data',[]],
-            'info_password_fail' => ['msg'=>'密码错误','code'=>'9006','data',[]]
+            'account_err' => ['msg'=>'账号已被注册','code'=>'9001','data'=>[]],
+            'account_ok' => ['msg'=>'账号合法','code'=>'9000','data'=>[]],
+            'register_ok' => ['msg'=>'注册成功','code'=>'9000','data'=>[]],
+            'register_fail' => ['msg'=>'注册失败','code'=>'9002','data'=>[]],
+            'register_code' => ['msg'=>'验证码错误','code'=>'9003','data'=>[]],
+            'register_email' => ['msg'=>'邮箱已被占用','code'=>'9004','data'=>[]],
+            'register_email_ok' => ['msg'=>'邮箱合法','code'=>'9000','data'=>[]],
+            'info_ok' => ['msg'=>'资料提交成功','code'=>'9000','data'=>[]],
+            'info_err' => ['msg'=>'资料提交失败','code'=>'9005','data'=>[]],
+            'info_password_ok' => ['msg'=>'密码正确','code'=>'9000','data'=>[]],
+            'info_password_fail' => ['msg'=>'密码错误','code'=>'9006','data'=>[]]
         ],
         'login' =>[
-            'code_err' => ['msg'=>'验证码错误','code'=>'1000','data',[]],
-            'code_ok' => ['msg'=>'登陆成功','code'=>'0','data',[]],
-            'code_fail' =>  ['msg'=>'登陆失败,账号或者密码错误','code'=>'1001','data',[]],
-            'code_over' =>  ['msg'=>'登陆超时','code'=>'1002','data',[]],
-            'code_lock' =>  ['msg'=>'该用户违规操作已被锁定','code'=>'1003','data',[]]
+            'code_err' => ['msg'=>'验证码错误','code'=>'1000','data'=>[]],
+            'code_ok' => ['msg'=>'登陆成功','code'=>'0','data'=>[]],
+            'code_fail' =>  ['msg'=>'登陆失败,账号或者密码错误','code'=>'1001','data'=>[]],
+            'code_over' =>  ['msg'=>'登陆超时','code'=>'1002','data'=>[]],
+            'code_lock' =>  ['msg'=>'该用户违规操作已被锁定','code'=>'1003','data'=>[]]
         ],
         'exitLogin' => [
-            'code_ok' => ['msg'=>'注销成功','code'=>'0','data',[]],
-            'code_fail' =>  ['msg'=>'注销失败','code'=>'1001','data',[]]
+            'code_ok' => ['msg'=>'注销成功','code'=>'0','data'=>[]],
+            'code_fail' =>  ['msg'=>'注销失败','code'=>'1001','data'=>[]]
         ],
         'operation' =>[
             'delete' =>[
-                'code_ok' => ['msg'=>'删除成功','code'=>'0','data',[]],
-                'code_fail' =>  ['msg'=>'删除失败','code'=>'1001','data',[]]
+                'code_ok' => ['msg'=>'删除成功','code'=>'0','data'=>[]],
+                'code_fail' =>  ['msg'=>'删除失败','code'=>'1001','data'=>[]]
             ],
             'update' =>[
-                'code_ok' => ['msg'=>'修改成功','code'=>'0','data',[]],
-                'code_fail' =>  ['msg'=>'修改失败','code'=>'1001','data',[]]
+                'code_ok' => ['msg'=>'修改成功','code'=>'0','data'=>[]],
+                'code_fail' =>  ['msg'=>'修改失败','code'=>'1001','data'=>[]]
             ],
             'add' =>[
-                'code_ok' => ['msg'=>'添加成功','code'=>'0','data',[]],
-                'code_fail' =>  ['msg'=>'添加失败','code'=>'1001','data',[]]
+                'code_ok' => ['msg'=>'添加成功','code'=>'0','data'=>[]],
+                'code_fail' =>  ['msg'=>'添加失败','code'=>'1001','data'=>[]]
             ]
+        ],
+        'result' =>[
+            "code_ok" =>['msg'=>'查询成功','code'=>'8000','data'=>[]],
+            "code_fail" =>['msg'=>'查询失败','code'=>'8001','data'=>[]]
         ]
     ]
 ];

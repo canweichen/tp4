@@ -6,6 +6,7 @@ use \think\Db;
 use Captcha;
 use think\Session;
 use \think\File;
+use think\Paginator;
 class User extends Controller
 {
     /**operation:判断session是否存在
@@ -29,15 +30,28 @@ class User extends Controller
     //个人中心 2018/1/27 陈灿伟
     public function userCenter(){
         $get_session=$this->check_session();
+        $tag=input('?get.who')?input('who'):'';
        if($get_session[1]){
            $res=Session::get('user');
-           $where=['userid' => $res[0]['userid']];
-           $user=Db::table('t_user')->where($where)->select();
-           $data=[
-               'info' =>$user
-           ];
-            $this->assign("info",$data);
-            return $this->fetch('userCenter');
+           if($tag==2){
+               $where=['userid' => $res[0]['userid']];
+               $user=Db::table('t_user')->where($where)->select();
+               //实现默认地址优先于其它地址
+               $address=Db::table('t_address')->where($where)->order('addressflag desc')->paginate(8);
+               $data=[
+                   'info' =>$user ,
+                   'address' => json_encode($address)
+               ];
+           }else{
+               $where=['userid' => $res[0]['userid']];
+               $user=Db::table('t_user')->where($where)->select();
+               $data=[
+                   'info' =>$user ,
+                   'address' => json_encode([])
+               ];
+           }
+           $this->assign("info",$data);
+           return $this->fetch('userCenter');
         }else{
             $this->error("非法闯入，跳转到登陆页面","login/Login/login","",10);
            exit();
@@ -251,6 +265,141 @@ class User extends Controller
                 echo json_encode(config('errorMsg')['operation']['update']['code_ok']);
             }else{
                 echo json_encode(config('errorMsg')['operation']['update']['code_fail']);
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //添加地址 2018/1/29 陈灿伟
+    public function saveAddress(){
+        $session=$this->check_session();
+        if($session[1]){
+            $name=input('?post.name')?input('name'):'';
+            $phone=input('?post.phone')?input('phone'):'';
+            $province=input('?post.province')?input('province'):'';
+            $city=input('?post.city')?input('city'):'';
+            $area=input('?post.area')?input('area'):'';
+            $details=input('?post.details')?input('details'):'';
+            $checkBox=input('?post.checkBox')?input('checkBox'):0;
+            if($checkBox){
+                Db::table('t_address')->where('userid',$session[0][0]['userid'])->update(['addressflag' => 0]);
+            }
+            //优化：1、将省市区的数据存入缓存然后根据id直接获取 2、页面直接获取到他们的名字
+            $pro=Db::table('provinces')->where(['`provinceid`' => $province])->select();
+            $ci=Db::table('cities')->where(['`cityid`' => $city])->select();
+            $ar=Db::table('areas')->where(['`areaid`' => $area])->select();
+            $data=[
+                'userid' => $session[0][0]['userid'],
+                'phone' => $phone ,
+                'provinces' => $pro[0]['province'] ,
+                'cities' => $ci[0]['city'] ,
+                'areas' => $ar[0]['area'] ,
+                'content' => $details,
+                'receivername' => $name ,
+                'addressflag' => $checkBox
+            ];
+            $res=Db::table('t_address')->insert($data);
+            if($res){
+               echo json_encode(config('errorMsg')['operation']['add']['code_ok']) ;
+            }else{
+                echo json_encode(config('errorMsg')['operation']['add']['code_fail']) ;
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //删除地址 2018/1/30 陈灿伟
+    public function deleteAddress(){
+        $session=$this->check_session();
+        $id=input('?post.id')?input('id'):'';
+        //条件：1、用户处于登陆状态 2、地址主键id不为空
+        if($session[1] && isset($id)){
+            //根据主键删除
+            $res=Db::table('t_address')->delete($id);
+            if($res){
+                echo json_encode(config('errorMsg')['operation']['delete']['code_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['operation']['delete']['code_fail']);
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //默认地址设置 2018/1/30 陈灿伟
+    public function defaultAddress(){
+        $session=$this->check_session();
+        $id=input('?post.id')?input('id'):'';
+        //条件：1、用户处于登陆状态 2、地址主键id不为空
+        if($session[1] && isset($id)){
+            //根据主键删除
+            $data=Db::table('t_address')->where('userid',$session[0][0]['userid'])->update(['addressflag' => 0]);
+            if($data){
+                $res=Db::table('t_address')->where('addressid',$id)->update(['addressflag' => 1]);
+                if($res){
+                    echo json_encode(config('errorMsg')['operation']['update']['code_ok']);
+                }else{
+                    echo json_encode(config('errorMsg')['operation']['update']['code_fail']);
+                }
+            }else{
+                echo json_encode(config('errorMsg')['operation']['update']['code_fail']);
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //通过id获取地址信息 2018/1/30 陈灿伟
+    public function getAddressById(){
+        $session=$this->check_session();
+        if($session[1]){
+            $id=input('?post.id')?input('id'):'';
+            $res=Db::table('t_address')->where(['addressid' => $id])->select();
+            $pro=Db::table('provinces')->where(['province' => $res[0]['provinces']])->select();
+            $ci=Db::table('cities')->where(['city' => $res[0]['cities']])->select();
+            $ar=Db::table('areas')->where(['area' => $res[0]['areas']])->select();
+            echo json_encode([$res,$pro[0]['provinceid'],$ci[0]['cityid'],$ar[0]['areaid']]);
+          /*  if(!empty($res)){
+                echo json_encode(config('errorMsg')['result']['code_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['result']['code_fail']);
+            }*/
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //保存修改后的地址 2018/1/30 陈灿伟
+    public function alterAddress(){
+        $session=$this->check_session();
+        if($session[1]){
+            $name=input('?post.name')?input('name'):'';
+            $phone=input('?post.phone')?input('phone'):'';
+            $province=input('?post.province')?input('province'):'';
+            $city=input('?post.city')?input('city'):'';
+            $area=input('?post.area')?input('area'):'';
+            $details=input('?post.details')?input('details'):'';
+            $checkBox=input('?post.checkBox')?input('checkBox'):0;
+            $id=input('?post.id')?input('id'):'';
+            if($checkBox){
+                //如果复选框的值为1，那就先更新当前用户的所以地址标志位为0 否则不操作
+                Db::table('t_address')->where('userid',$session[0][0]['userid'])->update(['addressflag' => 0]);
+            }
+            //优化：1、将省市区的数据存入缓存然后根据id直接获取 2、页面直接获取到他们的名字
+            $pro=Db::table('provinces')->where(['`provinceid`' => $province])->select();
+            $ci=Db::table('cities')->where(['`cityid`' => $city])->select();
+            $ar=Db::table('areas')->where(['`areaid`' => $area])->select();
+            $data=[
+                'phone' => $phone ,
+                'provinces' => $pro[0]['province'] ,
+                'cities' => $ci[0]['city'] ,
+                'areas' => $ar[0]['area'] ,
+                'content' => $details,
+                'receivername' => $name ,
+                'addressflag' => $checkBox
+            ];
+            $res=Db::table('t_address')->where('addressid',$id)->update($data);
+            if($res){
+                echo json_encode(config('errorMsg')['operation']['update']['code_ok']) ;
+            }else{
+                echo json_encode(config('errorMsg')['operation']['update']['code_fail']) ;
             }
         }else{
             exit('登陆超时');

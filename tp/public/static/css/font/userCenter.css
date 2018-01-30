@@ -45,7 +45,7 @@
 
 /*------------user start css----------------*/
 .user{
-    display: block;
+    display: none;
     text-align: center;
 }
 #images{
@@ -68,7 +68,7 @@
 
 /*----------------address start css---------------------*/
 .address{
-    display: none;
+    display:none;
 }
 .content h1{
     color: #757575;
