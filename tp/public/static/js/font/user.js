@@ -17,10 +17,33 @@ $(function(){
     });
     //我的收藏鼠标悬乎事件
     var $collect=$(".collect").children("div");
-    $collect.eq(1).css({borderColor:"orange",boxShadow:"0px 0px  10px 5px orange"});
+    $collect.eq(0).css({borderColor:"orange",boxShadow:"0px 0px  10px 5px orange"});
     $collect.mouseover(function(){
         $collect.css({borderColor:"lightGray",boxShadow:"0px 0px  0px 0px lightGray"});
         $(this).css({borderColor:"orange",boxShadow:"0px 0px  10px 5px orange"});
+    });
+    //收藏删除按钮悬乎事件
+    var $tag_i=$(".delStyle");
+    var $i=$(".delCol");
+    $tag_i.mouseover(function(){
+        $i.css("opacity",0) ;
+        $i.eq($(this).index()-1).css("opacity",1);
+    });
+    //地址按钮隐藏显示
+    var $ope_btn = $(".operation_btn");
+    $(".show_address").mouseover(function(){
+        $ope_btn.css("opacity",0);
+        $ope_btn.eq($(this).index()-2).css("opacity",1);
+    });
+    //我的订单删除按钮显示隐藏
+    var $tr=$(".showOrderIcon");
+    var $wait=$(".waitTr");
+    $wait.mousemove(function(){
+        $tr.css('opacity',0);
+        $(this).children('td').css('opacity',1);
+    });
+    $wait.mouseout(function(){
+        $tr.css('opacity',0);
     });
     //模态框添加点击事件-->隐藏移动端menu
     $("#mobile").click(function(){
@@ -44,7 +67,7 @@ $(function(){
        $("#more_picture").html("");
     });
     $("#end_action").click(function(){
-       alert(123);
+       //alert(123);
     });
     //上传图片
     layui.use('upload', function() {
@@ -172,7 +195,7 @@ $(function(){
         }else{
           layer.msg("姓名不能为空" ,{icon:0});
         }
-    })
+    });
 });
 getUrlWho();
 /*锚点标签页的跳转 2018/1/30 陈灿伟
@@ -180,11 +203,21 @@ getUrlWho();
 function getUrlWho(){
     //获取菜单标志位#009688
     var who=location.href.substr(location.href.indexOf('who')+4,1);
+    var whoLg=location.href.substr(location.href.indexOf('lg')+3,1);
     var $div=$(".content_right").children("div");
     $div.css('display','none');
     var $dd=$(".content_left").find("dd");
     $dd.css('background','none');
     if(location.href.indexOf('who')!=-1){
+       //我的订单标签页
+        if(location.href.indexOf('lg')!=-1){
+           var $body=$(".orderCont").children('div');
+           $body.css('display','none');
+           $body.eq(whoLg).css('display','block');
+           var $li=$(".orderTab").children('li');
+           $li.removeClass("layui-this");
+           $li.eq(whoLg).addClass("layui-this");
+       }
         $div.eq(who-1).css('display','block');
         $dd.eq(who-1).css('background','#009688');
     }else{
@@ -208,6 +241,7 @@ var app=new Vue({
         cityList:[],
         areasList:[],
         //默认选中的地址
+        money:'',
         province:110000,
         city:110100,
         area:110101,
@@ -216,9 +250,41 @@ var app=new Vue({
         telephone:'',
         details:'',
         address_id:'',
-        addressList:show_to_address
+        addressList:show_to_address,
+        //收藏商品
+        showCollect:show_to_collect,
+        //待支付订单
+        showWait:show_to_wait,
+        showWaitRelation:show_to_waitRelation,
+        //待支付订单
+        showAlready:show_to_already,
+        showAlreadyRelation:show_to_alreadyRelation
     },
     methods:{
+        //充值
+        addMoney:function(){
+          if(this.money!='' && this.money>0){
+              var m=layer.load();
+              $.ajax({
+                  type:'post',
+                  url:go_add_money,
+                  data:{money:this.money},
+                  success:function(res){
+                      layer.close(m);
+                      var result=JSON.parse(res);
+                      if(result.code=='2000'){
+                          layer.msg(result.msg,{icon:1,time:1000},function(){
+                              location.reload();
+                          })
+                      }else{
+                          layer.msg(result.msg,{icon:2});
+                      }
+                  }
+              });
+          }else{
+              layer.msg('充值金额必须合法',{icon:0,time:2000});
+          }
+        },
         //拍卖商品和普通商品发布页面切换
         actionType:function(){
             if(this.selected==2){
@@ -493,6 +559,143 @@ var app=new Vue({
                     }
                 })
             }
+        },
+        //删除收藏
+        deleteCollect:function(id){
+            var m=layer.confirm("是否残忍的取消当前收藏",{icon:0,title:'删除警示'},function(){
+                layer.close(m);
+                var index=layer.load();
+                $.ajax({
+                    type:'delete',
+                    url:go_to_deleteCollect,
+                    data:{id:id},
+                    success:function(res){
+                        layer.close(index);
+                        var result=JSON.parse(res);
+                        if(result.code==0){
+                            layer.msg(result.msg,{icon:1,time:1500},function(){
+                                location.reload();
+                            });
+                        }else{
+                            layer.msg(result.msg,{icon:2,time:1500});
+                        }
+                    }
+                });
+            })
+        },
+        //取消订单
+        cancelOrder:function(id){
+            var m=layer.confirm('确定取消当前订单',{icon:0},function(){
+                layer.close(m);
+                var index=layer.load();
+                $.ajax({
+                    type:'delete',
+                    url:go_to_delete_wait,
+                    data:{id:id},
+                    success:function(res){
+                        layer.close(index);
+                        var result=JSON.parse(res);
+                        if(result.code == 0){
+                            layer.msg(result.msg,{icon:1,time:1000},function(){
+                               location.reload();
+                            });
+                        }else{
+                            layer.msg(result,{icon:2});
+                        }
+                    }
+                });
+            })
+        },
+        //付款
+        goToPay:function(id){
+            //支付页面的跳转
+            //location.href=go_pay+"?xx="+id;
+            var m=layer.load();
+            $.ajax({
+                type:'post',
+                url:go_pay,
+                data:{id:id},
+                success:function(res){
+                    layer.close(m);
+                    var result=JSON.parse(res);
+                    if(result.code=='2000'){
+                        layer.msg(result.msg,{icon:1,time:2000},function(){
+                            location.reload();
+                        });
+                    }else if(result.code=='2003'){
+                        layer.confirm(result.msg+"，是否前往充值",{icon:5},function(){
+                            location.href=go_user;
+                        });
+                    }else{
+                        layer.msg(result.msg,{icon:2,time:2000});
+                    }
+                }
+            });
+        },
+        //删除订单下的某个商品
+        cancelChildTrade:function(nodeId,orderId){
+            var m=layer.confirm("确定移除该商品",{icon:0},function(){
+                layer.close(m);
+                var index=layer.load();
+                $.ajax({
+                    type:'delete',
+                    url:go_delete_childTrade,
+                    data:{cid:nodeId,oid:orderId},
+                    success:function(res){
+                        layer.close(index);
+                        var result=JSON.parse(res);
+                        if(result.code == 0){
+                            layer.msg(result.msg,{icon:1,time:1000},function(){
+                                location.reload();
+                            });
+                        }else if(result.code == '1004'){
+                            layer.msg('每个订单至少一个商品',{icon:5});
+                        }else{
+                            layer.msg(result,{icon:2});
+                        }
+                    },error:function(res){
+                        alert(res);
+                    }
+                });
+            });
+        },
+        //获取已付款订单
+        waitOrder:function(){
+            location.href=get_wait_order;
+        },
+        //获取已付款订单
+        alreadyOrder:function(){
+            location.href=get_already_order;
+        },
+        //获取全部订单
+        allOrder:function(){
+            location.href=get_all_order;
+        },
+        //确认收货
+        receipt:function(id){
+            //layui框架的弹层 pass为空不执行回掉
+            layer.prompt({title: '验证登陆密码',formType: 1,anim: 1}, function(pass,index){
+                layer.close(index);
+                var m=layer.load();
+                $.ajax({
+                    type:'post',
+                    url:go_to_receipt,
+                    data:{psd:pass,id:id},
+                    success:function(res){
+                        layer.close(m);
+                        var result=JSON.parse(res);
+                        if(result.code=='2004'){
+                            layer.msg(result.msg,{icon:2,anim:1});
+                        }else if(result.code=='2000'){
+                            layer.msg(result.msg,{icon:1,anim:1,time:1500},function(){
+                                location.reload();
+                            });
+                        }else{
+                            layer.msg(result.msg,{icon:5,anim:1});
+                        }
+                    }
+                });
+            });
         }
     },
     mounted: function () {
@@ -500,3 +703,4 @@ var app=new Vue({
         //this.getProvince(1);
     }
 });
+

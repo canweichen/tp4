@@ -31,23 +31,163 @@ class User extends Controller
     public function userCenter(){
         $get_session=$this->check_session();
         $tag=input('?get.who')?input('who'):'';
+        $lg=input('?get.lg')?input('lg'):'';
        if($get_session[1]){
            $res=Session::get('user');
+           $where=['userid' => $res[0]['userid']];
+           $user=Db::table('t_user')->where($where)->select();
            if($tag==2){
-               $where=['userid' => $res[0]['userid']];
-               $user=Db::table('t_user')->where($where)->select();
                //实现默认地址优先于其它地址
-               $address=Db::table('t_address')->where($where)->order('addressflag desc')->paginate(8);
+               $address=Db::table('t_address')->where($where)->order('addressflag desc')->paginate(8,false,[
+                   'query' => ['who' => 2]
+               ]);
+               $page = $address->render();
+               $this->assign('pageToAddress', $page);
                $data=[
                    'info' =>$user ,
                    'address' => json_encode($address)
                ];
-           }else{
-               $where=['userid' => $res[0]['userid']];
-               $user=Db::table('t_user')->where($where)->select();
+           }else if($tag==3){
+               $collect = Db::table(['t_collect'=>'collect','t_trade'=>'trade'])
+                   ->where('collect.tradeid = trade.tradeid')
+                   ->where('collect.userid' , $res[0]['userid'])
+                   ->order('collecttime desc')
+                   ->paginate(8,false,[
+                       'query' => ['who' => 3]
+                   ]);
+               $page = $collect->render();
+               $this->assign('pageToCollect',$page);
                $data=[
                    'info' =>$user ,
-                   'address' => json_encode([])
+                   'collect' => json_encode($collect)
+               ];
+           }else if($tag==4){
+               $data=[
+                   'info' =>$user
+               ];
+           }else if($tag==5){
+               $data=[
+                   'info' =>$user
+               ];
+           }else if($tag==6){
+               if($lg==1){
+                   /*---a表的全部字段 b表的全部字段 将a表的某个字段重命名为任意不重复字段---*/
+                   //3表示已支付订单
+                   $yet = Db::table(['t_order'=>'yet','t_trade'=>'trade'])
+                       ->field("yet.*,trade.*,yet.createtime time")
+                       ->where('yet.tradeid = trade.tradeid')
+                       ->where('yet.userid' , $res[0]['userid'])
+                       ->where('yet.orderstate',['=',3],['=',4],'or')
+                       ->order('yet.createtime desc')
+                       ->paginate(2,false,[
+                           'query' => ['who' => 6 ,'lg'=>1]
+                       ]);
+                   //判断一下这个值是否存在 存在输出 不存在提醒
+                   if(isset($yet[0])){
+                       //获取该用户的所有订单id
+                       $list = [];
+                       for($i=0;$i<count($yet);$i++){
+                           $list[] = $yet[$i]['orderid'];
+                       }
+                       //in内嵌式查询
+                       $relation = Db::table(['t_order_relation' => 'a' , 't_trade' => 'b'])
+                           ->where('a.s_tradeid = b.tradeid')
+                           ->where(array('a.s_orderid'=>array('IN',$list)))
+                           ->select();
+                       $page = $yet->render();
+                       $this->assign('pageToAlready',$page);
+                       $data=[
+                           'info' =>$user,
+                           'already' => json_encode([$yet,$relation])
+                       ];
+                   }else{
+                       $data=[
+                           'info' =>$user
+                       ];
+                   }
+               }else if($lg==2){
+                   $yet = Db::table(['t_order'=>'yet','t_trade'=>'trade'])
+                       ->field("yet.*,trade.*,yet.createtime time")
+                       ->where('yet.tradeid = trade.tradeid')
+                       ->where('yet.userid' , $res[0]['userid'])
+                       ->where('yet.orderstate',['=',1],['=',2],['=',3],['=',4],['=',5],'or')
+                       ->order('yet.createtime desc')
+                       ->paginate(2,false,[
+                           'query' => ['who' => 6 ,'lg'=>2]
+                       ]);
+                   //判断一下这个值是否存在 存在输出 不存在提醒
+                   if(isset($yet[0])){
+                       //获取该用户的所有订单id
+                       $list = [];
+                       for($i=0;$i<count($yet);$i++){
+                           $list[] = $yet[$i]['orderid'];
+                       }
+                       //in内嵌式查询
+                       $relation = Db::table(['t_order_relation' => 'a' , 't_trade' => 'b'])
+                           ->where('a.s_tradeid = b.tradeid')
+                           ->where(array('a.s_orderid'=>array('IN',$list)))
+                           ->select();
+                       $page = $yet->render();
+                       $this->assign('pageToAll',$page);
+                       $data=[
+                           'info' =>$user,
+                           'already' => json_encode([$yet,$relation])
+                       ];
+                   }else{
+                       $data=[
+                           'info' =>$user
+                       ];
+                   }
+               }else{
+                   /*---a表的全部字段 b表的全部字段 将a表的某个字段重命名为任意不重复字段---*/
+                   $wait = Db::table(['t_order'=>'wait','t_trade'=>'trade'])
+                       ->field("wait.*,trade.*,wait.createtime time")
+                       ->where('wait.tradeid = trade.tradeid')
+                       ->where('wait.userid' , $res[0]['userid'])
+                       ->where('wait.orderstate = 1')
+                       ->order('wait.createtime desc')
+                       ->paginate(2,false,[
+                           'query' => ['who' => 6 ]
+                       ]);
+                   if(isset($wait[0])) {
+                       //获取该用户的所有订单id
+                       $list = [];
+                       for ($i = 0; $i < count($wait); $i++) {
+                           $list[] = $wait[$i]['orderid'];
+                       }
+                       //in内嵌式查询
+                       $relation = Db::table(['t_order_relation' => 'a', 't_trade' => 'b'])
+                           ->where('a.s_tradeid = b.tradeid')
+                           ->where(array('a.s_orderid' => array('IN', $list)))
+                           ->select();
+                       $page = $wait->render();
+                       $this->assign('pageToWait', $page);
+                       $data = [
+                           'info' => $user,
+                           'wait' => json_encode([$wait, $relation])
+                       ];
+                   }else{
+                       $data = [
+                           'info' => $user
+                       ];
+                   }
+               }
+           }else if($tag==7){
+
+               $data=[
+                   'info' =>$user
+               ];
+           }else if($tag==8){
+               $data=[
+                   'info' =>$user
+               ];
+           }else if($tag==9){
+               $data=[
+                   'info' =>$user
+               ];
+           }else{
+               $data=[
+                   'info' =>$user
                ];
            }
            $this->assign("info",$data);
@@ -77,6 +217,7 @@ class User extends Controller
                     //echo $info->getFilename();
                     $res=Db::table('t_user')->where('userid',$id)->update(['headimg' => $path]);
                     if($res){
+                        $this->changeSession();
                         echo json_encode(config('errorMsg')['operation']['update']['code_ok']);
                     }else{
                         echo json_encode(config('errorMsg')['operation']['update']['code_fail']);
@@ -147,7 +288,7 @@ class User extends Controller
             exit("登陆超时");
         }
     }
-    //获取省份 2018/1/28 陈灿伟
+    //获取省份 2018/1/28 陈灿伟 可以将该数据存入缓存中
     public function getProvince(){
         if($this->check_session()[1]){
             $res=Db::table('provinces')->select();
@@ -156,7 +297,7 @@ class User extends Controller
             exit("登陆超时");
         }
     }
-    //获取市区 2018/1/28 陈灿伟
+    //获取市区 2018/1/28 陈灿伟 可以将该数据存入缓存中
     public function getCity(){
         $province=input('?post.province')?input('province'):'';
         if($this->check_session()[1]){
@@ -166,7 +307,7 @@ class User extends Controller
             exit("登陆超时");
         }
     }
-    //获取地区 2018/1/28 陈灿伟
+    //获取地区 2018/1/28 陈灿伟 可以将该数据存入缓存中
     public function getAreas(){
         $city=input('?post.city')?input('city'):'';
         if($this->check_session()[1]){
@@ -203,6 +344,7 @@ class User extends Controller
         ];
             $res=Db::table('t_user')->where('`userid`' , $session[0][0]['userid'])->update($data);
             if($res){
+                $this->changeSession();
                 echo json_encode(config('errorMsg')['register']['info_ok']);
             }else{
                 echo json_encode(config('errorMsg')['register']['info_err']);
@@ -223,6 +365,7 @@ class User extends Controller
             ];
             $res=Db::table('t_user')->where('userid',$session[0][0]['userid'])->update($data);
             if($res){
+                $this->changeSession();
                 echo json_encode(config('errorMsg')['operation']['update']['code_ok']);
             }else{
                 echo json_encode(config('errorMsg')['operation']['update']['code_fail']);
@@ -262,6 +405,7 @@ class User extends Controller
             ];
             $res=Db::table('t_user')->where('userid',$session[0][0]['userid'])->update($where);
             if(!empty($res)){
+                $this->changeSession();
                 echo json_encode(config('errorMsg')['operation']['update']['code_ok']);
             }else{
                 echo json_encode(config('errorMsg')['operation']['update']['code_fail']);
@@ -404,5 +548,180 @@ class User extends Controller
         }else{
             exit('登陆超时');
         }
+    }
+    //取消收藏 2018/1/31 陈灿伟
+    public function deleteCollect(){
+        $session=$this->check_session();
+        $id=input('?delete.id')?input('id'):'';
+        //条件：1、用户处于登陆状态 2、地址主键id不为空
+        if($session[1] && isset($id)){
+            //根据主键删除
+            $res=Db::table('t_collect')->delete($id);
+            if($res){
+                echo json_encode(config('errorMsg')['operation']['delete']['code_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['operation']['delete']['code_fail']);
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //取消待支付订单 2018/2/1 陈灿伟
+    public function deleteWait(){
+        $session=$this->check_session();
+        if($session[1]){
+            $id=input('?delete.id')?input('id'):'';
+            //取消后的订单状态为 2
+            $res=Db::table('t_order')->where('orderid',$id)->update(['orderstate' => 2]);
+            if($res){
+                echo json_encode(config('errorMsg')['operation']['cancel']['code_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['operation']['cancel']['code_fail']);
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //删除订单子商品 2018/2/1 陈灿伟
+    public function deleteChildTrade(){
+        $session = $this->check_session();
+        if($session[1]) {
+            //需要删除商品的关联id
+            $cid = input('?delete.cid') ? input('cid') : '';
+            //订单id
+            $oid = input('?delete.oid') ? input('oid') : '';
+            $exist = Db::table('t_order_relation')->where('s_orderid', $oid)->count();
+            //判断该订单下的商品数量是否大一？删除商品：提示不删除
+            if ($exist == 1) {
+                echo json_encode(config('errorMsg')['operation']['cancel']['code_err']);
+            } else {
+            //通过订单关联表查找该订单和号和商品 将订单金额更正 删除关联表的这条记录 商品数量++
+                $res = Db::table('t_order_relation')->where(['s_id' => $cid])->select();
+                $trade = Db::table('t_trade')->where(['tradeid' => $res[0]['s_tradeid']])->select();
+                $money = $res[0]['s_num'] * $trade[0]['nowprice'];
+                //是否引入事物处理事件 更新订单金额
+                $data = Db::table('t_order')->where('orderid', $res[0]['s_orderid'])->setDec('total', $money);
+                if ($data) {
+                    //删除该商品
+                    $result = Db::table('t_order_relation')->delete($cid);
+                    if ($result) {
+                        echo json_encode(config('errorMsg')['operation']['cancel']['code_ok']);
+                    } else {
+                        echo json_encode(config('errorMsg')['operation']['cancel']['code_fail']);
+                    }
+                }else{
+                    echo json_encode(config('errorMsg')['operation']['cancel']['code_fail']);
+                }
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //更新session 2018/2/2 陈灿伟
+    public function changeSession(){
+        $session=$this->check_session();
+        $res=Db::table('t_user')->select($session[0][0]['userid']);
+        Session::delete('user');
+        if(!Session::has('user')){
+            Session::set('user',$res);
+        }
+    }
+    //充值 2018/2/2 陈灿伟
+    public function addMoney(){
+        $session=$this->check_session();
+        if($session[1]){
+            $money=input('?post.money')?input('money'):'';
+            $res=Db::table('t_user')->where('userid',$session[0][0]['userid'])->setInc('money',$money);
+            if($res){
+                //更新session值
+                $this->purchase($session[0][0]['userid'],null,2,$money);
+                $this->changeSession();
+                echo json_encode(config('errorMsg')['operation']['recharge']['code_ok']);
+            }else{
+                echo json_encode(config('errorMsg')['operation']['recharge']['code_fail']);
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //前往支付页面1是待支付订单 2是交易关闭订单 3是已支付未发货 4是已支付且发货 5是已收货订单关闭 6是退款审核状态 7退款成功
+    //订单付款 2018/2/2 陈灿伟
+    public function pay(){
+        $session=$this->check_session();
+        if($session[1]){
+            $id=input('?post.id')?input('id'):'';
+            $data=Db::table('t_order')->select($id);
+            if((int)$session[0][0]['money'] >= (int)$data[0]['total']){
+                $res=$this->startTrans($id,$session[0][0]['userid'],(int)$data[0]['total']);
+                if($res){
+                    //更新用户session信息 事物处理成功执行
+                    $this->purchase($session[0][0]['userid'],(int)$data[0]['orderid'],1,(int)$data[0]['total']);
+                    $this->changeSession();
+                    echo json_encode(config('errorMsg')['operation']['pay']['code_ok']);
+                }else{
+                    echo json_encode(config('errorMsg')['operation']['pay']['code_fail']);
+                }
+            }else{
+                echo json_encode(config('errorMsg')['operation']['pay']['code_err']);
+            }
+            //return $this->fetch('pay');
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //事物操作 2018/2/2 陈灿伟
+    public function startTrans($id,$userid,$money){
+        Db::startTrans();
+        $time=date('Y-m-d:H:i:s',time());
+        $res1 = Db::table('t_order')->where('orderid',$id)->update(['orderstate'=>3,'paytime'=>$time]);
+        $res2 = Db::table('t_user')->where('userid',$userid)->setDec('money',$money);
+        if($res1 && $res2){
+            Db::commit();   //只有$res1 和  $res2  都执行成功是才真正执行上面的数据库操作
+            return true;
+        }else{
+            Db::rollback();  //  条件不满足，回滚
+            return false;
+        }
+    }
+    //收货 2018/2/2 陈灿伟
+    public function receipt(){
+        $session=$this->check_session();
+        if($session[1]){
+            $id=input('?post.id')?input('id'):'';
+            $psd=input('?post.psd')?input('psd'):'';
+            $enPsd=md5($psd);
+            if($session[0][0]['password'] == $enPsd){
+                $res=Db::table('t_order')->where('orderid',$id)->update(['orderstate'=>5 ,'takedeliver_time'=>date('Y-m-d H:i:s',time())]);
+                if($res){
+                    echo json_encode(config('errorMsg')['operation']['pay']['code_receipt_ok']);
+                }else{
+                    echo json_encode(config('errorMsg')['operation']['pay']['code_receipt_fail']);
+                }
+            }else{
+                echo json_encode(config('errorMsg')['operation']['pay']['code_password']);
+            }
+        }else{
+            exit('登陆超时');
+        }
+    }
+    //消费记录
+    public function purchase($user=null,$order=null,$type=null,$money=null){
+        $time=date("Y-m-d H:i:s",time());
+       /* if($operation==1){
+            $type = '购买';
+        }else if($operation==2){
+            $type ='充值';
+        }else{
+            $type = '退款';
+        }*/
+        $data=[
+            'p_userid' => $user,
+            'p_orderid' => $order,
+            'p_type' => $type,
+            'p_money' => $money,
+            'p_time' => $time
+        ];
+        $res=Db::table('t_purchase')->insert($data);
+        return $res;
     }
 }

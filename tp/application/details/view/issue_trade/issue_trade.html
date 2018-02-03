@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户发布的商品</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link rel="stylesheet" href="__STATIC__/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/css/font/issue_trade.css">
+</head>
+<body>
+<div id="issue_trade">
+    <nav class="navbar navbar-default" role="navigation" id="nav">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#example-navbar-collapse">
+                    <span class="sr-only">切换导航</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="navbar-brand" href="#">
+                    <a href="#">
+                        手机上58 <img style="display: inline;"  class="img-responsive"  src="__STATIC__/images/phone.png" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                <div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                分类 <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" >
+                                <li v-for="(val,index) in big_type">
+                                    <a  @click="to_type(index+1)">{{val.sortname}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p class="navbar-text navbar-right"><a href="#">帮助</a></p>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                我的58 <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">我的发布</a></li>
+                                <li><a href="#">买家交易</a></li>
+                                <li><a href="#">买家交易</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">招聘/简历</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">客服服务</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p class="navbar-text navbar-right"><a href="">注册</a></p>
+                    <p class="navbar-text navbar-right"><a href="{:url('details/Details/auction')}">登录<span style="margin:0 5px">|</span></a></p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div>
+        <div class="panel panel-default" >
+            <div class="panel-heading" >
+              <h4>发布者信息</h4>
+            </div>
+            <div class="panel-body">
+                <p>
+                    <span style="margin-right: 8px">昵称：{{user_nickname}}</span>
+                    <span>头像：</span>
+                    <img style="padding-top: 15px;height: 50px;display: inline-block;" class="img-responsive  " :src="static_url+user_headimg" alt="140">
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-default" >
+                <div class="panel-body" v-for="val in issue_arr"  @click="com_details(val.tradeid)">
+                    <div class="col-sm-5"  style="margin:10px 0">
+                        <img class="img-responsive user_com" :src="static_url+val.imgurl" alt="">
+                    </div>
+                    <div class="col-sm-7">
+                        <span>商品名：</span>{{val.tradename}}
+                        <p class="text-right"><span>{{val.originalprice}}</span>元</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li><a @click="prev()">上一页</a></li>
+                    <li><a @click="to_page(x)"  v-for="x in pagetotal">{{x}}</a></li>
+                    <li><a @click="next()">下一页</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="__STATIC__/public/jquery.js"></script>
+<script src="__STATIC__/public/vue.js"></script>
+<script src="__STATIC__/bootstrap/js/bootstrap.js"></script>
+<script src="__STATIC__/layui/layui.js"></script>
+<script>
+    var static_url = "__STATIC__/";
+    var nav_type_url = "{:url('details/Details/nav_type')}";
+    var issue_page = "{:url('details/Details/issue_page')}";
+    var issue_user = "{:url('details/Details/issue_user')}";
+    var details_page = "{:url('details/Details/details_page')}";
+
+
+
+    var issue_data = '{$issue_trade}';
+    console.log(issue_data);
+    issue_data=JSON.parse(issue_data);
+
+</script>
+<script src="__JS__/font/issue_trade.js" id="script_issue" type="text/javascript"></script>
+<script  type="text/javascript">
+    document.getElementById("script_issue").src="__JS__/font/issue_trade.js?ver="+Math.random();
+</script>
+</html>

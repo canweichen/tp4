@@ -19,7 +19,7 @@ return [
     // 应用调试模式
     'app_debug'              => true,
     // 应用Trace
-    'app_trace'              => true,
+    'app_trace'              => false,
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -280,6 +280,23 @@ return [
             'add' =>[
                 'code_ok' => ['msg'=>'添加成功','code'=>'0','data'=>[]],
                 'code_fail' =>  ['msg'=>'添加失败','code'=>'1001','data'=>[]]
+            ],
+            'cancel' =>[
+                'code_ok' => ['msg'=>'取消成功','code'=>'0','data'=>[]],
+                'code_fail' =>  ['msg'=>'取消失败','code'=>'1001','data'=>[]],
+                'code_err' =>  ['msg'=>'每个订单至少一个商品','code'=>'1004','data'=>[]]
+            ],
+            'recharge' =>[
+                'code_ok' => ['msg'=>'充值成功','code'=>'2000','data'=>[]],
+                'code_fail' =>  ['msg'=>'充值失败','code'=>'2001','data'=>[]]
+            ],
+            'pay' =>[
+                'code_ok' => ['msg'=>'支付成功','code'=>'2000','data'=>[]],
+                'code_fail' =>  ['msg'=>'支付失败','code'=>'2002','data'=>[]],
+                'code_err' =>  ['msg'=>'账户余额不足','code'=>'2003','data'=>[]],
+                'code_password' =>  ['msg'=>'支付密码错误','code'=>'2004','data'=>[]],
+                "code_receipt_ok" =>['msg'=>'收货成功','code'=>'2000','data'=>[]],
+                "code_receipt_fail" =>['msg'=>'收货失败','code'=>'2005','data'=>[]]
             ]
         ],
         'result' =>[

@@ -1,0 +1,22 @@
+@media (min-width: 768px) {
+    /*.span_margin{*/
+    /*margin-left: 30px;*/
+    /*}*/
+}
+.type_com {
+    padding: 3px 5px;
+    /*margin-bottom: 20px;*/
+    list-style: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    display: inline-block;
+}
+.type_com>li {
+    padding: 3px 5px;
+    /*margin-bottom: 20px;*/
+    list-style: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    display: inline-block;
+}
+

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!--禁止缩放-->
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
     <title>个人中心</title>
     <link rel="stylesheet" href="__STATIC__/layui/css/layui.css"  media="all"/>
     <link rel="stylesheet" href="__CSS__/font/userCenter.css"/>
@@ -23,8 +23,11 @@
         @media (max-width: 768px) {
             /*----待支付订单 按钮 自适应-------*/
             .mobile_xm_table{
-                width: 20%;
+                width: 40%;
                 text-align:center;
+            }
+            .mobile_xm_table_button>button{
+                font-size: 10px;
             }
             /*-------侧边栏菜单遮罩层移动端样式-------------*/
             #mobile{
@@ -140,7 +143,30 @@
         </div>
     </div>
 </div>
- <!--导航栏-->
+ <!--充值-->
+    <div class="modal fade" id="addMoney" tabindex="-1" role="dialog"  style="background: rgba(0,0,0,0.8)" aria-labelledby="exampleModalLabel" data-backdrop="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="margin-top: 250px">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="title">充值中心</h4>
+                </div>
+                <div class="modal-body" style="height: 80px">
+                    <form>
+                        <div class="form-group" style="text-align: center">
+                            <input type="number" class="form-control" v-model="money" name='money' placeholder="充值金额" style="width: 80%;height: 50px;display: inline-block;margin-bottom:20px">
+                            <br>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" class="btn btn-primary btn-lg" @click="addMoney()">保存</button>
+                    <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--导航栏-->
 <div class="nav" style="margin-bottom: -10px;">
         <ul class="layui-nav nav_bar_menu" style="text-align:right">
             <li class="layui-nav-item" style="float: left;">
@@ -173,23 +199,23 @@
                         <dl class="layui-nav-child">
                             <dd id="1"><a href="{:url('user/User/userCenter')}?who=1">个人信息</a></dd>
                             <dd id="2"><a href="{:url('user/User/userCenter')}?who=2">收货地址</a></dd>
-                            <dd id="3"><a href="javascript:;">我的收藏</a></dd>
-                            <dd id="4"><a href="javascript:;">财务明细</a></dd>
-                            <dd id="5"><a href="javascript:;">我的消息</a></dd>
+                            <dd id="3"><a href="{:url('user/User/userCenter')}?who=3">我的收藏</a></dd>
+                            <dd id="4"><a href="{:url('user/User/userCenter')}?who=4">财务明细</a></dd>
+                            <dd id="5"><a href="{:url('user/User/userCenter')}?who=5">我的消息</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item  layui-nav-itemed">
                         <a>订单中心</a>
                         <dl class="layui-nav-child">
-                            <dd id="6"><a href="javascript:;">买家订单</a></dd>
-                            <dd id="7"><a href="javascript:;">商家订单</a></dd>
+                            <dd id="6"><a href="{:url('user/User/userCenter')}?who=6&lg=0">买家订单</a></dd>
+                            <dd id="7"><a href="{:url('user/User/userCenter')}?who=7">商家订单</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed">
                         <a>发布闲置中心</a>
                         <dl class="layui-nav-child">
-                            <dd  id="8"><a href="javascript:;">发布闲置</a></dd>
-                            <dd id="9"><a href="javascript:;">我的商品</a></dd>
+                            <dd  id="8"><a href="{:url('user/User/userCenter')}?who=8">发布闲置</a></dd>
+                            <dd id="9"><a href="{:url('user/User/userCenter')}?who=9">我的商品</a></dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item layui-nav-itemed">
@@ -216,6 +242,9 @@
                                     <div class="layui-upload-list" style="display: inline">
                                         <span id="demoText"></span>
                                     </div>
+                                    <button class="layui-btn" data-toggle="modal" data-target="#addMoney">充值</button>
+                                    <span style="font-size: 20px">账户余额：</span>
+                                    <span style="font-size: 20px">{$info['info'][0]['money']}</span>
                                 </div>
                         </div>
                     <hr>
@@ -235,6 +264,7 @@
                                 <span>{$info['info'][0]['birthday']}</span>
                             </p>
                             <p style="float: right">
+                                <a href="{:url('user/User/information')}" class="">完善资料</a>
                                 <button class="layui-btn"  data-toggle="modal" data-target="#alter_user" id="openShade"><i class="layui-icon">&#xe642;</i></button>
                             </p>
                         </div> <!--grid-demo-->
@@ -276,119 +306,25 @@
                         </button>
                     </div>
                 </div>
-                <ul class="pagination">
-                    <li><a href="?page=1&who=2">&laquo;</a></li>
-                    <li  class="active"><a href="?page=1&who=2">1</a></li>
-                    <li><a href="?page=1&who=2">2</a></li>
-                    <li class="disabled"><span>&raquo;</span></li>
-                </ul>
+                {if isset($pageToAddress)}{$pageToAddress}{/if}
             </div>
             <div class="collect">
                 <h1 style="text-align: left">我的收藏</h1>
-                <div class="panel panel-default">
+                <div class="panel panel-default delStyle" v-for="collect in showCollect" style="cursor: pointer">
                     <div class="panel-body">
-                        <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
+                        <img :src="collect.imgurl" style="width: 80%;height: 80%;display: inline-block"/>
                     </div>
-                    <div class="panel-footer" style="background: none;">
-                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
-                        <p>￥<em>59.00</em></p>
+                    <div class="panel-footer" style="background: none;text-align: left">
+                        <p style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 1.5rem">{{ collect.tradename }}</p>
+                        <p>￥<em style="font-size: 2rem">{{ collect.nowprice }}</em></p>
                         <p style="color: red">
-                            <span>在售商品</span>
-                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
+                            <span v-if="collect.tradestate">在售商品</span>
+                            <span v-else>已售出</span>
+                            <i class="layui-icon delCol" style="float: right;font-size: 3rem" @click="deleteCollect(collect.c_id)">&#xe640;</i>
                         </p>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
-                    </div>
-                    <div class="panel-footer" style="background: none;">
-                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
-                        <p>￥<em>59.00</em></p>
-                        <p style="color: red">
-                            <span>在售商品</span>
-                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
-                        </p>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
-                    </div>
-                    <div class="panel-footer" style="background: none;">
-                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
-                        <p>￥<em>59.00</em></p>
-                        <p style="color: red">
-                            <span>在售商品</span>
-                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
-                        </p>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
-                    </div>
-                    <div class="panel-footer" style="background: none;">
-                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
-                        <p>￥<em>59.00</em></p>
-                        <p style="color: red">
-                            <span>在售商品</span>
-                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
-                        </p>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
-                    </div>
-                    <div class="panel-footer" style="background: none;">
-                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
-                        <p>￥<em>59.00</em></p>
-                        <p style="color: red">
-                            <span>在售商品</span>
-                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
-                        </p>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
-                    </div>
-                    <div class="panel-footer" style="background: none;">
-                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
-                        <p>￥<em>59.00</em></p>
-                        <p style="color: red">
-                            <span>在售商品</span>
-                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
-                        </p>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
-                    </div>
-                    <div class="panel-footer" style="background: none;">
-                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
-                        <p>￥<em>59.00</em></p>
-                        <p style="color: red">
-                            <span>在售商品</span>
-                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
-                        </p>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <img src="__STATIC__/images/qq.png" style="width: 80%;height: 80%;display: inline-block"/>
-                    </div>
-                    <div class="panel-footer" style="background: none;">
-                        <p style="overflow: hidden;word-break: keep-all">就肯定不死无法看就是点击数据库基本都是的变化的部署克服</p>
-                        <p>￥<em>59.00</em></p>
-                        <p style="color: red">
-                            <span>在售商品</span>
-                            <i class="layui-icon" style="float: right;cursor: pointer">&#xe640;</i>
-                        </p>
-                    </div>
-                </div>
+                {if isset($pageToCollect)}{$pageToCollect}{/if}
             </div>
             <div class="record">
                 <h1>财务明细</h1>
@@ -508,181 +444,143 @@
             </div>
             <div class="buy_order">
                 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-                    <ul class="layui-tab-title">
-                        <li class="layui-this">未支付</li>
-                        <li>待收货</li>
-                        <li>全部订单</li>
+                    <ul class="layui-tab-title orderTab">
+                        <li @click="waitOrder()" class="layui-this">未支付</li>
+                        <li @click="alreadyOrder()" >待收货</li>
+                        <li @click="allOrder()">全部订单</li>
                     </ul>
-                    <div class="layui-tab-content" style="height: auto;">
+                    <div class="layui-tab-content orderCont" style="height: auto;">
                         <div class="layui-tab-item layui-show">
-                            <div class="panel panel-default">
+                           <!-- <h1 style="text-align: center" v-if="wait_hide">目前还没有待支付订单</h1>-->
+                            <div class="panel panel-default" v-for="(wait,w_key in showWait">
                                 <div class="panel-heading" style="background: none">
                                     <p>待支付</p>
                                     <p>
-                                        <span>2018-01-25 12:26:56</span> |
-                                        <span>欧阳飞雪</span> |
-                                        订单号：<span>10236547895</span> |
+                                        <span>{{ wait.time }}</span> |
+                                        <span>{{ wait.sellerid }}</span> |
+                                        订单号：<span>20180000{{ wait.orderid }}</span> |
                                         <span>在线支付</span>
                                     </p>
                                      <p style="text-align: right;font-size: 15px">订单金额：￥
-                                            <b style="font-size: 18px">895.00</b>元
+                                            <b style="font-size: 18px">{{ wait.total }}</b>元
                                      </p>
                                 </div>
                                 <div class="panel-body">
-                                    <table>
-                                        <tr style="height: 100px">
-                                            <td style="width: 10%;">
-                                                <img src="__STATIC__/images/qq.png" class="trade_img">
-                                            </td>
-                                            <td style="width: 20%;">
-                                                <p>科技时代的巴萨的框架啊</p>
-                                                <p>699.00 x 1</p>
-                                            </td>
-                                            <td style="" class="mobile_xm_table">
-                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">立即支付</button><br>
-                                                <button class="btn btn-primary" style="color:black;background: none">取消订单</button>
+                                    <table style="position: relative">
+                                        <tr style="position: absolute;right: 0">
+                                            <td class="mobile_xm_table_button">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none" @click="goToPay(wait.orderid)">立即支付</button><br>
+                                                <button class="btn btn-primary" style="color:black;background: none" @click="cancelOrder(wait.orderid)">取消订单</button>
                                             </td>
                                         </tr>
-                                        <tr  style="height: 100px">
+                                        <tr style="height:100px"  class="waitTr" v-for="(value,key) in showWaitRelation" v-if="value.s_orderid == wait.orderid">
+                                            <!--删除订单中的个别商品-->
+                                            <td class="layui-icon showOrderIcon" style="width:1%;cursor: pointer;" @click="cancelChildTrade(value.s_id,wait.orderid)">&#x1006;</td>
                                             <td style="width: 10%;">
-                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                                <img :src="value.imgurl" class="trade_img">
                                             </td>
                                             <td style="width: 20%;">
-                                                <p>科技时代的巴萨的框架啊</p>
-                                                <p>699.00 x 1</p>
+                                                <p>{{ value.tradename }}</p>
+                                                <p>{{ value.nowprice }} x {{ value.s_num }}</p>
                                             </td>
+                                            <td class="mobile_xm_table"></td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading" style="background: none">
-                                    <p>待支付</p>
-                                    <p>
-                                        <span>2018-01-25 12:26:56</span> |
-                                        <span>欧阳飞雪</span> |
-                                        订单号：<span>10236547895</span> |
-                                        <span>在线支付</span>
-                                    </p>
-                                    <p style="text-align: right;font-size: 15px">订单金额：￥
-                                        <b style="font-size: 18px">895.00</b>元
-                                    </p>
-                                </div>
-                                <div class="panel-body">
-                                    <table>
-                                        <tr>
-                                            <td style="width: 10%;">
-                                                <img src="__STATIC__/images/qq.png" class="trade_img">
-                                            </td>
-                                            <td style="width: 20%;">
-                                                <p>科技时代的巴萨的框架啊</p>
-                                                <p>699.00 x 1</p>
-                                            </td>
-                                            <td style="" class="mobile_xm_table">
-                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">立即支付</button><br>
-                                                <button class="btn btn-primary" style="color:black;background: none">取消订单</button>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
+                            {if isset($pageToWait)}{$pageToWait}{/if}
                         </div>
                         <div class="layui-tab-item">
-                            <div class="panel panel-default">
+                           <!-- <h1 style="text-align: center" v-if="yet_hide">目前还没有待处理订单</h1>-->
+                            <div class="panel panel-default" v-for="yet in showAlready">
                                 <div class="panel-heading" style="background: none">
-                                    <p>待收货</p>
+                                    <p v-if="yet.orderstate==3">订单待处理，等待卖家发货</p>
+                                    <p v-else>订单已出库，等待买家收货</p>
                                     <p>
-                                        <span>2018-01-25 12:26:56</span> |
-                                        <span>欧阳飞雪</span> |
-                                        订单号：<span>10236547895</span> |
+                                        <span>{{ yet.time }}</span> |
+                                        <span>{{ yet.sellerid }}</span> |
+                                        订单号：<span>20180000{{ yet.orderid }}</span> |
                                         <span>在线支付</span>
                                     </p>
                                     <p style="text-align: right;font-size: 15px">订单金额：￥
-                                        <b style="font-size: 18px">895.00</b>元
+                                        <b style="font-size: 18px">{{ yet.total }}</b>元
                                     </p>
                                 </div>
                                 <div class="panel-body">
-                                    <table>
-                                        <tr>
+                                    <table style="position: relative">
+                                        <tr style="position: absolute;right: 0">
+                                            <td class="mobile_xm_table_button">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none" v-if="yet.orderstate==3" >等待发货</button><br v-if="yet.orderstate==3">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none" v-if="yet.orderstate==4" @click="receipt(yet.orderid)">确认收货</button><br v-if="yet.orderstate==4">
+                                                <button class="btn btn-primary" style="color:black;background: none" v-if="yet.orderstate==3">退款</button>
+                                            </td>
+                                        </tr>
+                                        <tr style="height:100px"  class="waitTr" v-for="(val,k) in showAlreadyRelation" v-if="val.s_orderid == yet.orderid">
+                                            <!--删除订单中的个别商品-->
                                             <td style="width: 10%;">
-                                                <img src="__STATIC__/images/qq.png" class="trade_img">
+                                                <img :src="val.imgurl" class="trade_img">
                                             </td>
                                             <td style="width: 20%;">
-                                                <p>科技时代的巴萨的框架啊</p>
-                                                <p>699.00 x 1</p>
+                                                <p>{{ val.tradename }}</p>
+                                                <p>{{ val.nowprice }} x {{ val.s_num }}</p>
                                             </td>
-                                            <td style="" class="mobile_xm_table">
-                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">确认收货</button><br>
-                                                <button class="btn btn-primary" style="color:black;background: none">退款</button>
-                                            </td>
+                                            <td class="mobile_xm_table"></td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading" style="background: none">
-                                    <p>待收货</p>
-                                    <p>
-                                        <span>2018-01-25 12:26:56</span> |
-                                        <span>欧阳飞雪</span> |
-                                        订单号：<span>10236547895</span> |
-                                        <span>在线支付</span>
-                                    </p>
-                                    <p style="text-align: right;font-size: 15px">订单金额：￥
-                                        <b style="font-size: 18px">895.00</b>元
-                                    </p>
-                                </div>
-                                <div class="panel-body">
-                                    <table>
-                                        <tr>
-                                            <td style="width: 10%;">
-                                                <img src="__STATIC__/images/qq.png" class="trade_img">
-                                            </td>
-                                            <td style="width: 20%;">
-                                                <p>科技时代的巴萨的框架啊</p>
-                                                <p>699.00 x 1</p>
-                                            </td>
-                                            <td style="" class="mobile_xm_table">
-                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">确认收货</button><br>
-                                                <button class="btn btn-primary" style="color:black;background: none">退款</button>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
+                            {if isset($pageToAlready)}{$pageToAlready}{/if}
                         </div>
                         <div class="layui-tab-item">
-                            <div class="panel panel-default">
+                            <div class="panel panel-default" v-for="all in showAlready">
                                 <div class="panel-heading" style="background: none">
-                                    <p>已收货</p>
+                                    <p v-if="all.orderstate==1">待支付</p>
+                                    <p v-if="all.orderstate==2">交易关闭</p>
+                                    <p v-if="all.orderstate==3">订单待处理，等待卖家发货</p>
+                                    <p v-if="all.orderstate==4">订单已出库，等待买家收货</p>
+                                    <p v-if="all.orderstate==5">交易成功</p>
                                     <p>
-                                        <span>2018-01-25 12:26:56</span> |
-                                        <span>欧阳飞雪</span> |
-                                        订单号：<span>10236547895</span> |
+                                        <span>{{ all.time }}</span> |
+                                        <span>{{ all.sellerid }}</span> |
+                                        订单号：<span>20180000{{ all.orderid }}</span> |
                                         <span>在线支付</span>
                                     </p>
                                     <p style="text-align: right;font-size: 15px">订单金额：￥
-                                        <b style="font-size: 18px">895.00</b>元
+                                        <b style="font-size: 18px">{{ all.total }}</b>元
                                     </p>
                                 </div>
                                 <div class="panel-body">
-                                    <table>
-                                        <tr>
-                                            <td style="width: 10%;">
-                                                <img src="__STATIC__/images/qq.png" class="trade_img">
-                                            </td>
-                                            <td style="width: 20%;">
-                                                <p>科技时代的巴萨的框架啊</p>
-                                                <p>699.00 x 1</p>
-                                            </td>
-                                            <td style="" class="mobile_xm_table">
+                                    <table style="position: relative">
+                                        <tr style="position: absolute;right: 0">
+                                            <td class="mobile_xm_table_button" v-if="all.orderstate==2 || all.orderstate==5">
                                                 <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">申请售后</button><br>
-                                                <button class="btn btn-primary" style="color:black;background: none">订单详情</button>
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">订单详情</button><br>
                                             </td>
+                                            <td class="mobile_xm_table_button" v-if="all.orderstate==1">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none"  @click="goToPay(all.orderid)">立即支付</button><br>
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none" @click="cancelOrder(all.orderid)">取消订单</button><br>
+                                            </td>
+                                            <td class="mobile_xm_table_button" v-if="all.orderstate==4 || all.orderstate==3">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none" v-if="all.orderstate==3">等待发货</button><br v-if="all.orderstate==3">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none" v-if="all.orderstate==4" @click="receipt(all.orderid)">确认收货</button><br v-if="all.orderstate==4">
+                                                <button class="btn btn-primary" style="color:black;margin-bottom: 10px;background: none">退款</button>
+                                            </td>
+                                        </tr>
+                                        <tr style="height:100px"  class="waitTr" v-for="(a,m) in showAlreadyRelation" v-if="a.s_orderid == all.orderid">
+                                            <!--删除订单中的个别商品-->
+                                            <td style="width: 10%;">
+                                                <img :src="a.imgurl" class="trade_img">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <p>{{ a.tradename }}</p>
+                                                <p>{{ a.nowprice }} x {{ a.s_num }}</p>
+                                            </td>
+                                            <td class="mobile_xm_table"></td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
+                            {if isset($pageToAll)}{$pageToAll}{/if}
                         </div>
                     </div>
                 </div>
@@ -888,9 +786,12 @@
 </div>
 </body>
 <script>
+    var whoIndex=location.href.substr(location.href.indexOf('who')+4,1);
     var exit_login="{:url('login/Login/exitLogin')}";
     var go_login="{:url('login/Login/login')}";
     /*---个人中心用户信息修改--*/
+    var go_user="{:url('user/User/userCenter')}";
+    var go_add_money="{:url('user/User/addMoney')}";
     var alter_heading="{:url('user/User/alterHead')}";
     var go_alter_user="{:url('user/User/alterUser')}";
     var go_sex="{$info['info'][0]['sex']}";
@@ -903,8 +804,42 @@
     var go_address_default='{:url("user/User/defaultAddress")}';
     var go_address_alter='{:url("user/User/alterAddress")}';
     var go_get_address_information='{:url("user/User/getAddressById")}';
-    var show_to_address=JSON.parse('{$info["address"]}').data;
-    console.log(show_to_address);
+    var show_to_json_address='{if isset($info["address"])}{$info["address"]}{/if}';
+    var show_to_address=null;
+    if(show_to_json_address!=''){
+        show_to_address=JSON.parse(show_to_json_address).data;
+    }
+        /*----收藏商品-----*/
+    var show_to_json_collect='{if isset($info["collect"])}{$info["collect"]}{/if}';
+    var show_to_collect=null;
+    if(show_to_json_collect!=''){
+        show_to_collect=JSON.parse(show_to_json_collect).data;
+    }
+    var go_to_deleteCollect='{:url("user/User/deleteCollect")}';
+    /*---我的待支付订单--*/
+    var get_wait_order='{:url("user/User/userCenter")}?who=6&lg=0';
+    var show_to_json_wait = '{if isset($info["wait"])}{$info["wait"]}{/if}';
+    var show_to_wait=null;
+    var show_to_waitRelation=null;
+    if(show_to_json_wait!=''){
+        show_to_wait=JSON.parse(show_to_json_wait)[0].data;
+        show_to_waitRelation=JSON.parse(show_to_json_wait)[1];
+    }
+    var go_to_delete_wait='{:url("user/User/deleteWait")}';
+    var go_delete_childTrade='{:url("user/User/deleteChildTrade")}';
+    //获取已支付订单
+    var get_already_order='{:url("user/User/userCenter")}?who=6&lg=1';
+    var go_pay='{:url("user/User/pay")}';
+    var go_to_receipt='{:url("user/User/receipt")}';
+    var show_to_json_already = '{if isset($info["already"])}{$info["already"]}{/if}';
+    var show_to_already=null;
+    var show_to_alreadyRelation=null;
+    if(show_to_json_already!=''){
+        show_to_already =JSON.parse(show_to_json_already)[0].data;
+        show_to_alreadyRelation=JSON.parse(show_to_json_already )[1];
+    }
+    //全部订单
+    var get_all_order='{:url("user/User/userCenter")}?who=6&lg=2';
 </script>
 <script src="__JS__/font/user.js"></script>
 </html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>确认订单</title>
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--引入css样式框文件-->
+    <link rel="stylesheet" href="__STATIC__/css/default.min.css">
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        p {
+            margin: 10px 0;
+        }
+        .radio {
+            background-color: #fff;
+            position: absolute;
+            top: calc(50% - 150px);
+            height: 110px;
+            width: 100%;
+        }
+        .radio > h2 {
+            width: 900px;
+            margin: 20px auto;
+        }
+        .radio_list {
+            width: 900px;
+            margin: 0 auto;
+        }
+        .radio_list > div{
+            position: relative;
+            float: left;
+            width: calc(33.333% - 40px);
+            margin: 0 0 0 10px;
+            height: 120px;
+            border: 4px solid #d2d2d2;
+            border-radius: 6px;
+            padding: 15px 10px;
+        }
+        .radio_list > div * {
+            width: 100%;
+        }
+        .radio_list > div.ack {
+            overflow: hidden;
+            color: #0080FF;
+            border: 4px solid #0080FF;
+            background-color: rgba(0, 128, 255, 0.06);
+        }
+        .radio_list > div.ack:after {
+            content: "";
+            position: absolute;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            transform: rotate(45deg);
+            /*background-color: #0080FF;*/
+        }
+        .radio_list > div.ack:before {
+            content: "√";
+            position: absolute;
+            right: 6px;
+            bottom: 0;
+            transform: rotate(0);
+            color: #0080FF;
+            z-index: 2;
+        }
+        .radio .button {
+            display: inline-block;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+        .radio button {
+            width: 300px;
+            margin: 15px auto;
+            display: block;
+            border: 0;
+            background-color: #0080ff;
+            color: #fff;
+            padding: 15px 0;
+            font-size: 20px;
+            border-radius: 6px;
+        }
+    </style>
+    <link href="__STATIC__/css/bootstrap.min.css" rel="stylesheet">
+    <!--基于jq的-->
+    <script src="__STATIC__/js/jquery-1.12.3.min.js" ></script>
+    <!--引入动态效果的js-->
+    <script src="__STATIC__/js/bootstrap.min.js" ></script>
+</head>
+<body>
+<div class="container" style="background-color: gainsboro;text-align: center">
+    <div class="col-md-5">
+        <p style="float: left">
+            <a href="{:url(index/Index/index)}"><span class="glyphicon glyphicon-home"></span>转转首页</a>
+        </p>
+        <p style="margin-left: 20px;float: left">
+            <span>hi,</span>
+            <span>13799212123</span>
+            <span><a href="#">退出</a></span>
+        </p>
+    </div>
+    <div class="col-md-3">
+
+    </div>
+    <div class="col-md-4">
+        <p style="float: left">
+            <a href="">我的转转</a>
+        </p>
+        <p style="margin-left: 20px;float: left">
+            <a href="{:url('index/Index/shoppingCar')}" class="glyphicon glyphicon-shopping-cart">我的购物车<span class="badge">50</span></a>
+        </p>
+        <p style="margin-left: 20px;float: left">
+            <a href="{:url('user/User/userCenter')}?who=3">收藏夹</a>
+        </p>
+    </div>
+</div>
+<div class="container" style="margin-top: 10px">
+    <a href="http://127.0.0.1/HF170614_4/thinkphp5/public/index.php"><img src="__STATIC__/image/zz.jpg"/></a>
+</div>
+<div class="container" id="add">
+    <h4>选择收货地址</h4>
+    <div class="inpit" type="inpit/assembly" formname="ack">
+        <div class="radio">
+            <div class="radio_list" checkbox>
+                <div class="col-md-4" name="a" value="地址1">
+                    <div ><span>福建</span><span>福州</span>&nbsp;&nbsp;(<span>欧阳大锤</span><span>13299623125</span>收）</div>
+                    <div><span>台江区</span><span>华润橡树湾6期橡树公园53栋（可放南门门口收件宝）</span></div>
+                </div>
+                <div class="col-md-4" name="a" value="地址2">
+                    <div><span>福建</span><span>福州</span>&nbsp;&nbsp;(<span>大锤</span><span>13299623125</span>收）</div>
+                    <div><span>台江区</span><span>华润橡树湾6期橡树呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜公呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜园53栋（可放南门门口收件宝）</span></div>
+                </div>
+                <div class="col-md-4" name="a" value="地址3">
+                    <div>地址</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+        添加新地址
+    </button>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <div>省</div>
+                            <select class="form-control" name="province" id="province">
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <div>市</div>
+                            <select class="form-control" name="city" id="city">
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <div>县/区</div>
+                            <select class="form-control" name="area" id="area">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-11">详细地址<textarea class="form-control" rows="1"></textarea></div>
+                    <div class="col-md-5">收货人<textarea class="form-control" rows="1"></textarea></div><div class="col-md-5">联系电话<textarea class="form-control" rows="1"></textarea></div>
+                </div>
+                <div class="modal-footer" style="margin-top: 100px;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+<div class="container" style="margin-top: 10px" id="order">
+    <div class="table-responsive">
+        <h4>确认订单信息</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>商品</th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>留言</th>
+                    <th>小计</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="width:350px"><a href=""><img style="width: 50px;height: 50px" src="__STATIC__/image/1516806906.jpg"/><span>汽车呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜</span></a></td>
+                    <td>100.00</td>
+                    <td>
+                        <input class="addBtn min" type="button" value="-" />
+                        <input class="join" type="text" value="1" style="width: 20px">
+                        <input class="addBtn add" type="button" value="+" />
+                    </td>
+                    <td><textarea class="form-control" rows="1"></textarea></td>
+                    <td style="color: red;">100.00</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="background-color: #b9def0;height: 80px;font-size: 15px">
+            <div class="col-md-8"></div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <div>运送方式:<span>快递</span>
+                </div>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <div style="text-align: center">10.00</div>
+            </div>
+
+            <div class="col-md-8" ></div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <div style="float: right">费用合计</div>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <div style="text-align: center;color: red;font-weight:bold;font-size: 18px"><span>￥</span>1001.00</div>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>商品</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>留言</th>
+                <th>小计</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="width:350px"><a href=""><img style="width: 50px;height: 50px" src="__STATIC__/image/1516806906.jpg"/><span>汽车呜呜呜呜呜呜呜呜呜呜呜呜呜无法定位服务</span></a></td>
+                <td>100.00</td>
+                <td>
+                    <input class="addBtn min" type="button" value="-" />
+                    <input class="join" type="text" value="1" style="width: 20px">
+                    <input class="addBtn add" type="button" value="+" />
+                </td>
+                <td><textarea class="form-control" rows="1"></textarea></td>
+                <td style="color: red;">100.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <div style="background-color: #b9def0;height: 80px;font-size: 15px">
+            <div class="col-md-8"></div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <div>运送方式:<span>快递</span>
+                </div>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <div style="text-align: center">10.00</div>
+            </div>
+
+            <div class="col-md-8" ></div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <div style="float: right">费用合计</div>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px">
+                <div style="text-align: center;color: red;font-weight:bold;font-size: 18px"><span>￥</span>1001.00</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" style="margin-top: 20px">
+    <div class="col-md-7"></div>
+    <div class="col-md-5">
+        <div style="border: 1px solid red">
+            <div class="text-right" style="font-size: 30px"><span style="font-size: 15px;font-weight: bold">实付款：</span><span>￥</span><span style="color: red;font-weight:bold;">1000</span></div>
+            <div class="text-right"><span style="font-size: 15px;font-weight: bold">寄送至：</span><span>福州福州福州福州福州福州福州福州</span></div>
+            <div class="text-right"><span style="font-size: 15px;font-weight: bold">收货人：</span><span>小明</span><span>13799228276</span></div>
+        </div>
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+        <button type="button" class="btn btn-danger btn-lg" id="ti" style="float: right;">提交订单</button>
+    </div>
+</div>
+<div class="container-fluid" style="background-color: gray;margin-top: 20px">
+    <div class="container">
+        <div class="col-md-8" style="margin-top: 50px">
+            <p>署名:</p>
+            <p>网址:</p>
+            <p>备案号:</p>
+        </div>
+        <div class="col-md-4">
+            <span>更多精彩内容快来转转</span>
+            <div class="erweima" style="width: 150px;height: 150px">
+                <img src="">
+            </div>
+            <span>扫描二维码下载转转APP</span>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script type="text/javascript" src="__STATIC__/js/jquery-2.1.0.js"></script>
+<script type="text/javascript" src="__STATIC__/js/inpitassembly-2.0.js"></script>
+<script>
+    $(document).ready(function(){
+        $("[type='inpit/assembly']").inpitassembly({
+            selected:"ack"
+        });
+        $("[type='inpit/assembly']").find("button").click(function(){
+            var val = check_result($(this));
+            alert(val[0].data);
+        });
+    })
+</script>
+<script>
+    var showSite='{:url("index/Index/showSite")}';
+    var showCity='{:url("index/Index/showCity")}';
+    var showArea='{:url("index/Index/showArea")}';
+</script>
+<script>var showOrder='{:url(index/Index/showOrder)}'</script>
+<script src="__STATIC__/js/order.js"></script>
+
+</html>

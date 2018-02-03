@@ -103,6 +103,11 @@
 }
 .operation_btn{
     float: right;
+    opacity: 0;
+}
+.address ul{
+    width: 100%;
+    margin: 50px 30% 0 30%;
 }
 /*-----------------address end css--------------------------*/
 /*-------------collect start css---------------------*/
@@ -111,9 +116,16 @@
 }
 .collect>.panel{
     float: left;
-    width: 190px;
+    width: 300px;
     margin: 25px 0 0 3%;
     text-align: center;
+}
+.delCol{
+    opacity:0
+}
+.collect ul{
+    width: 100%;
+    margin: 50px 30% 0 30%;
 }
 /*------------collect end css----------------------------*/
 
@@ -146,6 +158,9 @@
 .mobile_xm_table{
     width: 50%;
     text-align: right;
+}
+.showOrderIcon{
+    opacity: 0;
 }
 /*---------------buy_order end css---------------------*/
 /*-----------boss_order start css------------------*/

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--引入css样式框文件-->
+    <link rel="stylesheet" href="__STATIC__/bootstrap/css/bootstrap.min.css"/>
+    <!--基于jq的-->
+    <script src="__STATIC__/public/jquery.js"></script>
+    <!--引入动态效果的js-->
+    <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body class="website">
+<!--这是首页头-->
+<div class="container" style="background-image: url('__STATIC__/images/banner1.jpg');height: 100px">
+    <div class="col-md-8">
+    </div>
+    <div class="col-md-2">
+        <span class="navgations_text">转转小程序</span>
+        <div class="hoverBox" style="width: 250px;display: none"></div>
+    </div>
+    <div class="col-md-2">
+        <span class="navgations_text">转转APP</span>
+        <div class="hoverBox" style="width: 280px;display: none"></div>
+    </div>
+</div>
+<!--这是第二行-->
+<div class="container" style="font-family:SimSun;color: gray">
+    <div class="col-md-3" style="text-align: center">
+        <span>真实个人 名企认证</span>
+    </div>
+    <div class="col-md-3" style="text-align: center">
+        <span>专业服务 专业保障</span>
+    </div>
+    <div class="col-md-3" style="text-align: center">
+        <span>担保交易 安全靠谱</span>
+    </div>
+    <div class="col-md-3" style="text-align: center">
+        <span>微信好友 趣味互动</span>
+    </div>
+</div>
+<!--这是banner-->
+<div class="container" style="height: 400px;">
+    <div id="myCarousel" class="carousel slide">
+        <!-- 轮播（Carousel）指标 -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <!-- 轮播（Carousel）项目 -->
+        <div class="carousel-inner">
+            <div class="item active">
+                <img src="__STATIC__/images/banner1.jpg" alt="First slide">
+            </div>
+            <div class="item">
+                <img src="__STATIC__/images/banner2.jpg" alt="Second slide">
+            </div>
+            <div class="item">
+                <img src="__STATIC__/images/loginBJ.jpg" alt="Third slide">
+            </div>
+        </div>
+        <!-- 轮播（Carousel）导航 -->
+        <a class="carousel-control left" href="#myCarousel"
+           data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#myCarousel"
+           data-slide="next">&rsaquo;</a>
+    </div>
+</div>
+
+<div class="body">
+    <!--这是分类-->
+    <div class="container">
+        <h3>转转分类</h3>
+        <div class="col-md-2" style="text-align: center">
+            <a href="{:url('index/Index/order')}">电脑</a>
+        </div>
+        <div class="col-md-2" style="text-align: center">
+            <a href="{:url('index/index/de')}">手机</a>
+        </div>
+        <div class="col-md-2" style="text-align: center">
+            <a href="{:url('index/index/de')}">家电</a>
+        </div>
+        <div class="col-md-2" style="text-align: center">
+            <a href="{:url('index/index/de')}">汽车</a>
+        </div>
+        <div class="col-md-2" style="text-align: center">
+            <a href="{:url('index/index/de')}">电动车</a>
+        </div>
+        <div class="col-md-2" style="text-align: center">
+            <a href="{:url('index/index/de')}">家具</a>
+        </div>
+    </div>
+    <div class="body2">
+        <div class="container">
+            <h3>手机类</h3>
+            <div class="col-md-1"></div>
+            <div id="phone">
+                <!--<div class="col-md-1"></div>-->
+                <!--<div class="col-md-2">-->
+                    <!--<p id="picture" style="height: 200px;width: 200px">-->
+                        <!--<a href="#">-->
+                            <!--<img src="" alt="" id="img-responsive">-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p id="title">-->
+                        <!--<a href="#">-->
+                            <!--<span>iPhone6国行64g</span>-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p id="author">-->
+                        <!--<img src="">-->
+                        <!--<span></span>-->
+                    <!--</p>-->
+                    <!--<p class="price">-->
+                        <!--<span class="sale">￥</span>-->
+                        <!--<span id="sale_price">1600</span>-->
+                    <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                    <!--<p class="picture" style="height: 200px;width: 200px">-->
+                        <!--<a href="#">-->
+                            <!--<img src="" alt="" class="img-responsive">-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p class="title">-->
+                        <!--<a href="#">-->
+                            <!--<span>iPhone6国行64g</span>-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p class="author">-->
+                        <!--<img src="">-->
+                        <!--<span></span>-->
+                    <!--</p>-->
+                    <!--<p class="price">-->
+                        <!--<span class="sale">￥</span>-->
+                        <!--<span class="sale_price">1600</span>-->
+                    <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                    <!--<p class="picture" style="height: 200px;width: 200px">-->
+                        <!--<a href="#">-->
+                            <!--<img src="" alt="" class="img-responsive">-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p class="title">-->
+                        <!--<a href="#">-->
+                            <!--<span>iPhone6国行64g</span>-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p class="author">-->
+                        <!--<img src="">-->
+                        <!--<span></span>-->
+                    <!--</p>-->
+                    <!--<p class="price">-->
+                        <!--<span class="sale">￥</span>-->
+                        <!--<span class="sale_price">1600</span>-->
+                    <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                    <!--<p class="picture" style="height: 200px;width: 200px">-->
+                        <!--<a href="#">-->
+                            <!--<img src="" alt="" class="img-responsive">-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p class="title">-->
+                        <!--<a href="#">-->
+                            <!--<span>iPhone6国行64g</span>-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p class="author">-->
+                        <!--<img src="">-->
+                        <!--<span></span>-->
+                    <!--</p>-->
+                    <!--<p class="price">-->
+                        <!--<span class="sale">￥</span>-->
+                        <!--<span class="sale_price">1600</span>-->
+                    <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                    <!--<p class="picture" style="height: 200px;width: 200px">-->
+                        <!--<a href="#">-->
+                            <!--<img src="" alt="" class="img-responsive">-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p class="title">-->
+                        <!--<a href="#">-->
+                            <!--<span>iPhone6国行64g</span>-->
+                        <!--</a>-->
+                    <!--</p>-->
+                    <!--<p class="author">-->
+                        <!--<img src="">-->
+                        <!--<span></span>-->
+                    <!--</p>-->
+                    <!--<p class="price">-->
+                        <!--<span class="sale">￥</span>-->
+                        <!--<span class="sale_price">1600</span>-->
+                    <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-1"></div>-->
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <div class="container">
+            <h3>家电类</h3>
+            <div class="col-md-1"></div>
+            <div id="elappliance">
+                <!--<div class="col-md-1"></div>-->
+                <!--<div class="col-md-2">-->
+                <!--<p id="picture" style="height: 200px;width: 200px">-->
+                <!--<a href="#">-->
+                <!--<img src="" alt="" id="img-responsive">-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p id="title">-->
+                <!--<a href="#">-->
+                <!--<span>iPhone6国行64g</span>-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p id="author">-->
+                <!--<img src="">-->
+                <!--<span></span>-->
+                <!--</p>-->
+                <!--<p class="price">-->
+                <!--<span class="sale">￥</span>-->
+                <!--<span id="sale_price">1600</span>-->
+                <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                <!--<p class="picture" style="height: 200px;width: 200px">-->
+                <!--<a href="#">-->
+                <!--<img src="" alt="" class="img-responsive">-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p class="title">-->
+                <!--<a href="#">-->
+                <!--<span>iPhone6国行64g</span>-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p class="author">-->
+                <!--<img src="">-->
+                <!--<span></span>-->
+                <!--</p>-->
+                <!--<p class="price">-->
+                <!--<span class="sale">￥</span>-->
+                <!--<span class="sale_price">1600</span>-->
+                <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                <!--<p class="picture" style="height: 200px;width: 200px">-->
+                <!--<a href="#">-->
+                <!--<img src="" alt="" class="img-responsive">-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p class="title">-->
+                <!--<a href="#">-->
+                <!--<span>iPhone6国行64g</span>-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p class="author">-->
+                <!--<img src="">-->
+                <!--<span></span>-->
+                <!--</p>-->
+                <!--<p class="price">-->
+                <!--<span class="sale">￥</span>-->
+                <!--<span class="sale_price">1600</span>-->
+                <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                <!--<p class="picture" style="height: 200px;width: 200px">-->
+                <!--<a href="#">-->
+                <!--<img src="" alt="" class="img-responsive">-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p class="title">-->
+                <!--<a href="#">-->
+                <!--<span>iPhone6国行64g</span>-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p class="author">-->
+                <!--<img src="">-->
+                <!--<span></span>-->
+                <!--</p>-->
+                <!--<p class="price">-->
+                <!--<span class="sale">￥</span>-->
+                <!--<span class="sale_price">1600</span>-->
+                <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-2">-->
+                <!--<p class="picture" style="height: 200px;width: 200px">-->
+                <!--<a href="#">-->
+                <!--<img src="" alt="" class="img-responsive">-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p class="title">-->
+                <!--<a href="#">-->
+                <!--<span>iPhone6国行64g</span>-->
+                <!--</a>-->
+                <!--</p>-->
+                <!--<p class="author">-->
+                <!--<img src="">-->
+                <!--<span></span>-->
+                <!--</p>-->
+                <!--<p class="price">-->
+                <!--<span class="sale">￥</span>-->
+                <!--<span class="sale_price">1600</span>-->
+                <!--</p>-->
+                <!--</div>-->
+                <!--<div class="col-md-1"></div>-->
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <div class="container">
+            <h3>汽车类</h3>
+            <div class="col-md-1"></div>
+            <div id="car">
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="background-color: gray">
+    <div class="container">
+        <div class="col-md-8" style="margin-top: 50px">
+            <p>署名:</p>
+            <p>网址:</p>
+            <p>备案号:</p>
+        </div>
+        <div class="col-md-4">
+            <span>更多精彩内容快来转转</span>
+            <div class="erweima" style="width: 150px;height: 150px">
+                <img src="">
+            </div>
+            <span>扫描二维码下载转转APP</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    var showData='{:url("index/Index/showData")}';
+</script>
+<script src="__JS__/font/index.js"></script>
+

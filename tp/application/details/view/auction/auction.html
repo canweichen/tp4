@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>拍卖</title>
+    <link rel="stylesheet" href="__STATIC__/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css">
+    <link rel="stylesheet" href="__STATIC__/css/font/auction.css">
+
+</head>
+<body style="background-color: #f5f5f5">
+
+<div id="auction_vue">
+    <!--导航条-->
+    <nav class="navbar navbar-default" role="navigation" id="nav">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#example-navbar-collapse">
+                    <span class="sr-only">切换导航</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="navbar-brand" href="#">
+                    <span>{{city_name}}</span>
+                    <span>[</span>
+                        <span class="btn btn-xs"  @click="change_city()" data-toggle="modal" data-target="#cityModal">切换城市</span>
+                        <!-- 模态框（Modal） -->
+                        <div class="modal fade" id="cityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0,0,0,0.5)">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <select v-model="provinceid"  style="width:180px"  @change="province_option($event)">
+                                        <option v-for="val in province_arr" :value="val.provinceid"  :name="val.procince">{{val.province}}</option>
+                                    </select>
+                                    <select v-model="cityid" style="width:180px" >
+                                        <option  v-for="val in cities_arr"  :value="val.cityid">{{val.city}}</option>
+                                    </select>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                                    <button @click="to_change_city()"  type="button" class="btn btn-primary btn-xs">提交更改</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div>
+                    <span>]</span>
+                    <span style="margin:0 3px">|</span>
+                    <a href="#">
+                        手机上58 <img style="display: inline;"  class="img-responsive"  src="__STATIC__/images/phone.png" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                <div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                分类 <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" >
+                                <li v-for="(val,index) in big_type">
+                                    <a  @click="to_type(index+1)">{{val.sortname}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p class="navbar-text navbar-right"><a href="#">帮助</a></p>
+                    <!--<p class="navbar-text navbar-right"><a href="#">免费发布信息</a></p>-->
+                    <!--<p class="navbar-text navbar-right"><a href="">VIP中心</a> </p>-->
+                    <ul class="nav navbar-nav navbar-right">
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                我的58 <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">我的发布</a></li>
+                                <li><a href="#">买家交易</a></li>
+                                <li><a href="#">买家交易</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">招聘/简历</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">客服服务</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p class="navbar-text navbar-right"><a href="">注册</a></p>
+                    <p class="navbar-text navbar-right"><a href="{:url('details/Details/auction')}">登录<span style="margin:0 5px">|</span></a></p>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row party">
+                <div class="span6">
+                    <div class="col-sm-10">
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="#"><img class="img-responsive"  src="__STATIC__/images/logo_58.gif" alt=""></a>
+                                <!--<span class="divider"></span>-->
+                            </li>
+                            <li>
+                                <a href="#">首页</a>
+                            </li>
+                            <li>
+                                <a href="#">福州二手市场</a>
+                                <!--<span class="divider">></span>-->
+                            </li>
+                            <li class="active">福州二手手机</li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="checkbox" autocomplete="off" checked>
+                                <span class="glyphicon glyphicon-pencil"></span>免费发布信息
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div  class="container" id="content">
+
+        <div class="content_left" >
+
+            <div class="picture-big">
+                <img class="img-responsive center-block  width_height"  :src="default_img" width="360" height="360"  id="pic" />
+                <!--<img class="img-responsive center-block  width_height"  v-bind:src="{big_img}" src="__STATIC__/images/test_car/1516805734.jpg" width="360" height="360"  id="pic" />-->
+            </div>
+            <div class="picture-small img_small">
+
+                <span style="display: inline-block" v-for="(val,index) in img_arr" v-if="index<5">
+                    <img class="img-responsive " @mouseover="small_big_img(val.imagesurl)" :src="static_url+val.imagesurl" width="70" height="70"  />
+                </span>
+            </div>
+        </div>
+
+        <div class="content_m">
+            <h4><b>商品名：</b><span>{{tradename}}</span></h4>
+            <p><b>价格：</b><span>{{startprice}}</span> 元</p>
+            <p><b>当前价格：</b><span>{{currentprice}}</span></p>
+            <p><b>成色：</b><span>{{tradedegree}}</span></p>
+            <p><b>区域：</b><a href="#">{{areas}}</a></p>
+            <p><b>每次出价：</b><span>{{addprice}}</span> 元</p>
+            <p><b>已出价次数：</b><span>{{total}}</span> 次</p>
+            <p><b>已出价人数：</b><span>{{joinpeople}}</span> 人</p>
+            <div><b>本场结束倒计时：</b><div id="timer" style="font-size:0.8em; text-align:center;display: inline-block"></div></div>
+            <div>
+                <button type="button" @click="auction_bid">我要出价</button>
+                <button type="button" @click="cash_deposit" >去交保证金</button>
+                <!-- 模态框（Modal） -->
+                <div class="modal fade" id="auctionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false" style="background-color: rgba(0,0,0,0.5)">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title"><b>保证金</b></h4>
+                            </div>
+                            <div class="modal-body">
+                                <h4 class="modal-title"><b>本场拍卖保证金为：</b>{{auction_cash}}元</h4>
+                                <p style="padding: 5px 0 ;">
+                                    <b>请输入登录密码：</b>
+                                    <input style="padding: 5px;border-radius: 8px"  type="password" id="auction_password" placeholder="请输入密码">
+                                </p>
+                                <p style="font-size: 10px"> <b>温馨提示：</b>为保障双方权益，拍卖需缴纳拍卖价的10%保证金。
+                                    拍卖结束后，若您竞拍成功，保证金可以当货款或全额退回。若您没有竞拍成功保证金全额退回
+                                 </p>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                            <button @click="to_cash_deposit()"  type="button" class="btn btn-primary btn-xs">提交更改</button>
+                        </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div>
+                <button type="button" onclick="customer_service()">联系客服</button>
+            </div>
+            <p style="font-size:12px">
+                <b>温馨提示：</b>为保障双方权益，拍卖需缴纳拍卖价的10%保证金。
+                拍卖结束后，若您竞拍成功，保证金可以当货款或全额退回。若您没有竞拍成功保证金全额退回
+            </p>
+            <p>
+                <span style="margin-left: 5px">{{lookcount}}</span> 次浏览
+                <span  style="margin-left: 5px">{{collectcount}}</span> 人收藏
+
+                <span style="float: right;margin-right: 35px">
+                     <span >
+                        <img src="__STATIC__/images/fenxian.png" alt="">
+                    <span>分享</span>
+                </span>
+
+                <span  style="margin-left: 5px" @click.once="collect()">
+                    <img  :src="collect_url" alt="">
+                    <span>收藏</span>
+                </span>
+
+            </span>
+            </p>
+
+        </div>
+
+        <div class="content_b">
+
+            <img style="padding-top: 15px;height: 50px;" class="img-responsive  center-block user_datum" :src="user_headimg" alt="">
+            <p  class="text-center user_datum" style="margin:10px 0">{{user_nickname}}</p>
+            <!--<p class="text-center user_datum"><button type="button" class="btn btn-default">联系我</button></p>-->
+            <h4> <span style="padding-bottom: 15px ">他的其他商品</span></h4>
+            <div class="row"  style="margin:10px 0;border-bottom: 1px #aaa7aa solid" v-for="val in user_com_arr"  @click="com_details(val.tradeid)">
+                <div class="col-sm-5"  style="margin:10px 0">
+                    <img class="img-responsive user_com" :src="static_url+val.imgurl" alt="">
+                </div>
+                <div class="col-sm-7">
+                    <span>商品名：</span>{{val.tradename}}
+                    <p class="text-right"><span>{{val.originalprice}}</span>元</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <button class="btn btn-sm"  @click="look_user_more_trade">查看更多>>></button>
+            </div>
+        </div>
+    </div>
+    <!--content-->
+
+    <div class="container">
+        <div class="col-sm-9">
+            <div  style="border:1px solid red">
+                <div class="row" >
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            宝贝评论（<span>{{msgcount}}</span>）
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default" v-for="val in com_msg_arr">
+                            <div class="panel-heading" style="padding: 3px 15px;font-size: 12px" >
+                                用户：<span>{{val.nickname}}</span>
+                                <span style="margin-left: 15px">{{val.msgtime}}</span>
+                            </div>
+                            <div class="panel-body">
+                                评论内容：<span>{{val.content}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 text-center" id="content_page" style="display: none">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li><a @click="prev()">上一页</a></li>
+                                <li><a @click="to_page(x)"  v-for="x in pagetotal">{{x}}</a></li>
+                                <li><a @click="next()">下一页</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="padding: 3px 15px;font-size: 12px">
+                                <span>登录连接</span><span>我来说两句</span>
+                            </div>
+                            <div class="panel-body">
+                                <div id="fabu_content" contenteditable="true"></div>
+                                <button @click="btn_content()" type="button">发布</button>
+                            </div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary btn-xs">
+                        <span @click="more_msg()"  id="look_more">查看更多>>></span>
+                        <span  @click="shrink_msg()" id="shrink" style="display: none">收缩</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="panel panel-default" style="margin: 0 12px">
+                    <div class="panel-body">
+                        物品详情
+                    </div>
+                </div>
+                <div class="com-sm-12" style="margin:5px 12px">
+                    商品简介：{{tradedescribe}}
+                </div>
+                <div>
+                    <div  class="com-sm-12" style="margin:5px 0" v-for="val in img_arr">
+                        <img style="width: 100%"  :src="static_url+val.imagesurl" alt="">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <p style="margin:6px"><h2>精品推荐</h2></p>
+            <div class="row"  style="margin:10px 0;border-bottom: 1px #aaa7aa solid">
+                <div class="col-sm-5">
+                    <img class="img-responsive" src="__STATIC__/images/test_car/1516805739.jpg" alt="">
+                </div>
+                <div class="col-sm-7">
+                    <p>商品名</p>
+                    <p class="text-right"><span>55</span>元</p>
+                </div>
+            </div>
+            <div class="row"  style="margin:10px 0;border-bottom: 1px #aaa7aa solid">
+                <div class="col-sm-5"  style="margin:10px 0">
+                    <img class="img-responsive" src="__STATIC__/images/test_car/1516805739.jpg" alt="">
+                </div>
+                <div class="col-sm-7">
+                    <p>商品名</p>
+                    <p class="text-right"><span>55</span>元</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="container" style="background-color: #2b2b2b;padding: 35px; width: 100%" >
+        <div style="color:white" class="text-center">123456.com <a href="#">帮助中心</a></div>
+    </div>
+</div>
+
+</body>
+<script src="__STATIC__/public/jquery.js"></script>
+<script src="__STATIC__/public/vue.js"></script>
+<script src="__STATIC__/bootstrap/js/bootstrap.js"></script>
+<script src="__STATIC__/layui/layui.js"></script>
+<script>
+    var details_data_url = "{:url('details/Details/details_data')}";
+    var details_shopping_url = "{:url('details/Details/shopping_car')}";
+    var details_promptly_url = "{:url('details/Details/promptly')}";
+    var details_collect_url = "{:url('details/Details/collect')}";
+    var details_content_url = "{:url('details/Details/content_data')}";
+    var details_more_content_url = "{:url('details/Details/more_content_data')}";
+    var details_content_page_url = "{:url('details/Details/content_page')}";
+    var details_shrink_page_url = "{:url('details/Details/shrink_page')}";
+    var static_url = "__STATIC__/";
+
+    var details_addauction_url = "{:url('details/Details/addauction_data')}";
+    var auction_bid_url = "{:url('details/Details/auction_bid')}";
+    var auction_cash_deposit_url = "{:url('details/Details/cash_deposit')}";
+    var details_cities_arr_url = "{:url('details/Details/cities_arr')}";
+    var details_change_city_url = "{:url('details/Details/change_city')}";
+    var auction_to_cash_deposit_url = "{:url('details/Details/to_cash_deposit')}";
+    var nav_type_url = "{:url('details/Details/nav_type')}";
+    var nav_type_click="{:url('details/Details/nav_type_click')}";
+    var look_user_more_trade="{:url('details/Details/look_user_more_tradek')}";
+    var issue_more_trade = "{:url('details/Details/issue_more_trade')}";
+    var details_page = "{:url('details/Details/details_page')}";
+
+</script>
+
+
+<script src="__JS__/font/auction.js" id="script_details" type="text/javascript"></script>
+
+<script  type="text/javascript">
+    document.getElementById("script_details").src="__JS__/font/auction.js?ver="+Math.random();
+</script>
+
+<script type="text/javascript">
+    $(function(){
+        //切换城市
+        $('#cityModal').modal('hide');
+        $('#cityModal').on('hide.bs.modal',
+                function() {
+//                alert('嘿，我听说您喜欢模态框...');
+                });
+        //押金
+        $('#auctionModal').modal('hide');
+        $('#auctionModal').on('hide.bs.modal',function() {
+//            alert('嘿，我听说您喜欢模态框...');
+        });
+    });
+
+</script>
+</html>
+
+
+
+
+
+
+
